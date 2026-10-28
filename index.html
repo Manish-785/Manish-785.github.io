@@ -108,28 +108,31 @@ strong { font-weight: 600; }
 @media (max-width: 48rem) { .top ul .opt { display: none; } .top { gap: 0.5rem; } .top ul a { padding-inline: 0.45rem; } }
 
 /* ============================== HERO ============================== */
-/* Two fields meeting at half height; the headline crosses the seam and changes ink */
-.hero { position: relative; height: 100svh; min-height: 34rem; overflow: hidden; --seam: 50%; }
-.hero::after { content: ""; position: absolute; inset: var(--seam) 0 0; background: var(--blue); }
+/* Two fields stacked in a grid; the headline sits at the bottom of the upper one and crosses
+   the seam. Each field grows with its content, so nothing overlaps on short or zoomed windows.
+   --hs is the headline size, capped by the window's height as well as its width. */
+.hero { --hs: clamp(3.5rem, min(10.5vw, 21svh), 10rem); display: grid; grid-template-rows: 1fr 1fr; min-height: 100svh; }
+.hero-top { position: relative; min-height: calc(var(--head-h) + 1.15 * var(--hs) + 2rem); }
+.hero-low {
+  display: flex; flex-direction: column; justify-content: center; background: var(--blue);
+  padding: calc(0.57 * var(--hs) + clamp(1.5rem, 4svh, 2.5rem)) var(--m) clamp(2rem, 6svh, 3.5rem);
+}
 .headline {
-  position: absolute; left: 0; right: 0; top: calc(var(--seam) - 1.15em); z-index: 1;
-  font: 700 var(--s-disp)/0.86 var(--font); letter-spacing: -0.035em; text-align: center;
+  position: absolute; left: 0; right: 0; bottom: calc(-0.57 * var(--hs)); z-index: 1;
+  font: 700 var(--hs)/0.86 var(--font); letter-spacing: -0.035em; text-align: center;
 }
 .headline span { display: block; }
 .headline .over { color: var(--over, var(--blue)); clip-path: inset(0 0 calc(100% - 1.15em) 0); }
 .headline .under { position: absolute; inset: 0; color: #fff; clip-path: inset(1.15em 0 0 0); }
-.hero-sub {
-  position: absolute; z-index: 1; left: var(--m); right: var(--m); bottom: clamp(2.5rem, 7svh, 3.5rem);
-  margin: 0 auto; max-width: 36rem; text-align: center; color: #fff; font-size: var(--s-lead); line-height: 1.3;
-}
-.hero-sub .btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-top: 1.4rem; font-size: 1rem; }
+.hero-sub { margin: 0 auto; max-width: 36rem; text-align: center; color: #fff; font-size: var(--s-lead); line-height: 1.3; }
+.hero-sub .btns { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.6rem; margin-top: 1.4rem; font-size: 1rem; }
 .hero-sub .btn { --btn: #fff; --btn-ink: var(--blue); }
 .hero-sub .btn.alt { --btn: var(--blue-2); --btn-ink: #fff; }
 @media (max-width: 40rem) {
-  .hero { --seam: 48%; height: 80svh; min-height: 30rem; }
-  .headline { font-size: 17vw; }
+  .hero { --hs: min(17vw, 21svh); grid-template-rows: auto auto; min-height: 0; }
+  .hero-top { min-height: calc(var(--head-h) + 1.15 * var(--hs) + 5rem); }
   .hero-sub { font-size: 1.125rem; max-width: 30ch; }
-  .hero-sub .btn.cv { display: none; } /* the CV link stays in the top bar */
+  .hero-sub .btn-cv { display: none; } /* the CV link stays in the top bar */
 }
 
 /* ============================== INTRO (blue) ============================== */
@@ -309,8 +312,9 @@ strong { font-weight: 600; }
 @media print {
   .top, .skip, .bench fieldset { display: none; }
   .f-blue, .f-black, .f-stone, .bench { background: #fff !important; color: #000 !important; }
-  .hero { height: auto; min-height: 0; padding: 2rem 0; }
-  .hero::after { display: none; }
+  .hero { display: block; min-height: 0; padding: 2rem 0; }
+  .hero-top { min-height: 0; }
+  .hero-low { background: none; padding: 1rem 0; }
   .headline, .hero-sub { position: static; color: #000; }
   .headline .under { display: none; }
   .headline .over { clip-path: none; color: #000; }
@@ -345,17 +349,21 @@ strong { font-weight: 600; }
      the way a reaction path crosses its barrier
      ===================================================================== -->
 <section class="hero f-paper" id="top" data-field="paper" aria-labelledby="hero-h">
-  <h1 class="headline" id="hero-h">
-    <span class="sr-only">Manish: </span>
-    <span class="over">Over the<br>barrier</span>
-    <span class="under" aria-hidden="true">Over the<br>barrier</span>
-  </h1>
-  <div class="hero-sub">
-    <p style="margin:0">I’m Manish. I build optimisation and machine-learning methods that find reaction transition states with far fewer expensive calculations.</p>
-    <div class="btns">
-      <a class="btn" href="#contact">Reach out</a>
-      <a class="btn alt" href="#research">See the research</a>
-      <a class="btn alt cv" href="assets/Manish_CV.pdf">CV (PDF)</a>
+  <div class="hero-top">
+    <h1 class="headline" id="hero-h">
+      <span class="sr-only">Manish: </span>
+      <span class="over">Over the<br>barrier</span>
+      <span class="under" aria-hidden="true">Over the<br>barrier</span>
+    </h1>
+  </div>
+  <div class="hero-low">
+    <div class="hero-sub">
+      <p style="margin:0">I’m Manish. I build optimisation and machine-learning methods that find reaction transition states with far fewer expensive calculations.</p>
+      <div class="btns">
+        <a class="btn" href="#contact">Reach out</a>
+        <a class="btn alt" href="#research">See the research</a>
+        <a class="btn alt btn-cv" href="assets/Manish_CV.pdf">CV (PDF)</a>
+      </div>
     </div>
   </div>
 </section>
