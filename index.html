@@ -129,6 +129,7 @@ strong { font-weight: 600; }
   .hero { --seam: 48%; height: 80svh; min-height: 30rem; }
   .headline { font-size: 17vw; }
   .hero-sub { font-size: 1.125rem; max-width: 30ch; }
+  .hero-sub .btn.cv { display: none; } /* the CV link stays in the top bar */
 }
 
 /* ============================== INTRO (blue) ============================== */
@@ -286,10 +287,9 @@ strong { font-weight: 600; }
 @media (max-width: 52rem) { .c-main, .c-links { grid-column: 1 / -1; } }
 
 /* ============================== FOOTER (black, cropped name) ============================== */
-.foot { position: relative; overflow: hidden; padding: 2rem var(--m) 0; }
+.foot { padding: 1.75rem var(--m); }
 .foot .line { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; font-size: var(--s-small); color: var(--soft); }
 .foot .line a { color: var(--black-ink); }
-.foot .name { display: block; margin: 1rem 0 0 -0.04em; font: 700 27vw/0.8 var(--font); letter-spacing: -0.05em; white-space: nowrap; transform: translateY(22%); user-select: none; }
 
 /* ============================== MOTION ============================== */
 /* Content is visible without JavaScript; the entrance only runs once the script has tagged <html>. */
@@ -334,10 +334,10 @@ strong { font-weight: 600; }
       <li class="opt"><a href="#projects">Projects</a></li>
       <li class="opt"><a href="#publications">Publications</a></li>
       <li class="opt"><a href="#about">About</a></li>
-      <li><a href="#contact">Contact</a></li>
+      <li><a href="assets/Manish_CV.pdf">CV</a></li>
     </ul>
   </nav>
-  <a class="btn" href="assets/Manish_CV.pdf">CV</a>
+  <a class="btn" href="#contact">Reach out</a>
 </header>
 
 <!-- =====================================================================
@@ -353,8 +353,9 @@ strong { font-weight: 600; }
   <div class="hero-sub">
     <p style="margin:0">I’m Manish. I build optimisation and machine-learning methods that find reaction transition states with far fewer expensive calculations.</p>
     <div class="btns">
-      <a class="btn" href="#research">See the research</a>
-      <a class="btn alt" href="assets/Manish_CV.pdf">CV (PDF)</a>
+      <a class="btn" href="#contact">Reach out</a>
+      <a class="btn alt" href="#research">See the research</a>
+      <a class="btn alt cv" href="assets/Manish_CV.pdf">CV (PDF)</a>
     </div>
   </div>
 </section>
@@ -628,7 +629,6 @@ strong { font-weight: 600; }
     <span>Manish · Chemical Engineering, IIT Bombay</span>
     <span><a href="https://arxiv.org/abs/2511.19267">arXiv</a> · Last updated October 2026</span>
   </div>
-  <span class="name" aria-hidden="true">Manish</span>
 </footer>
 
 <script>
