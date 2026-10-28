@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Manish · IIT Bombay</title>
-<meta name="description" content="Manish — chemical engineering undergraduate at IIT Bombay working on optimisation and machine learning for atomistic simulation. Research, publications and projects; open to research roles in AI for science.">
+<title>Manish · Machine learning for atomistic simulation</title>
+<meta name="description" content="Manish — chemical engineering at IIT Bombay, working on optimisation and machine learning for atomistic simulation. Research, publications, projects and CV.">
 <meta name="author" content="Manish">
 <link rel="canonical" href="https://manish-785.github.io/">
 
@@ -12,7 +12,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://manish-785.github.io/">
 <meta property="og:title" content="Manish · Machine learning for atomistic simulation">
-<meta property="og:description" content="Chemical engineering undergraduate at IIT Bombay building optimisation and ML methods for atomistic simulation.">
+<meta property="og:description" content="Optimisation and machine-learning methods that make atomistic simulation cheaper. Chemical engineering, IIT Bombay.">
 <meta property="og:image" content="https://manish-785.github.io/assets/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -20,10 +20,14 @@
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121315" media="(prefers-color-scheme: dark)">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+
+<script>document.documentElement.classList.add('js');</script>
 
 <style>
 /* =====================================================================
@@ -31,33 +35,38 @@
    ===================================================================== */
 :root {
   --bg:        #fbfaf7;
-  --surface:   #f3f1ec;
+  --surface:   #f1eee8;
   --text:      #1c1d20;
-  --muted:     #5c5f66;
-  --faint:     #8a8d93;
+  --muted:     #55585f;
+  --faint:     #6f7278;
   --rule:      #e3e0d9;
   --accent:    #1a5e8a;
+  --accent-ink:#ffffff;
   --accent-bg: #e6eef4;
   --serif: "Source Serif 4", "Iowan Old Style", Charter, Georgia, serif;
   --sans:  Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
   --measure: 40rem;
+  --gutter: clamp(1rem, 4vw, 2.5rem);
+  --nav-h: 3.5rem;
+  --ease: cubic-bezier(.2, .7, .2, 1);
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg:        #121315;
-    --surface:   #1b1d20;
+    --surface:   #1c1e21;
     --text:      #ebe9e4;
-    --muted:     #a6a7a4;
-    --faint:     #7d7f82;
+    --muted:     #abaca9;
+    --faint:     #8f9194;
     --rule:      #2b2e32;
     --accent:    #82b8de;
+    --accent-ink:#0d1820;
     --accent-bg: #1b2a36;
   }
 }
 
 /* ============================== BASE ============================== */
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 1rem); }
 body {
   margin: 0;
   background: var(--bg);
@@ -66,95 +75,170 @@ body {
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
 }
-a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; }
+a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.18em; transition: color .15s, text-decoration-thickness .15s; }
 a:hover { text-decoration-thickness: 2px; }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
 strong { font-weight: 600; }
 img { max-width: 100%; height: auto; display: block; }
+h1, h2, h3 { text-wrap: balance; }
+p { margin: 0 0 1rem; max-width: var(--measure); text-wrap: pretty; }
 
-.skip { position: absolute; left: -999px; top: 0.5rem; background: var(--text); color: var(--bg); padding: 0.4rem 0.8rem; font-family: var(--sans); font-size: 0.875rem; z-index: 10; }
+.skip { position: absolute; left: -999px; top: 0.5rem; background: var(--text); color: var(--bg); padding: 0.4rem 0.8rem; font-family: var(--sans); font-size: 0.875rem; z-index: 30; }
 .skip:focus { left: 0.5rem; }
 
-.page { max-width: 60rem; margin: 0 auto; padding: 4.5rem 1.5rem 3rem; }
+.wrap { max-width: 68rem; margin: 0 auto; padding: 0 var(--gutter); }
 
-/* Section layout: label in a left rail on wide screens, stacked on phones */
-section { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0.6rem; padding: 2.4rem 0; border-top: 1px solid var(--rule); }
-section > h2 {
-  margin: 0; font: 600 0.75rem/1.6 var(--sans); letter-spacing: 0.09em; text-transform: uppercase; color: var(--faint);
-  padding-top: 0.25rem;
+/* ============================== NAV ============================== */
+.nav { position: sticky; top: 0; z-index: 20; background: var(--bg); transition: box-shadow .2s; }
+.nav.scrolled { box-shadow: 0 1px 0 var(--rule), 0 6px 16px -12px rgb(0 0 0 / .25); }
+.nav .wrap { display: flex; align-items: center; gap: 1.5rem; height: var(--nav-h); }
+.nav-name { font: 600 1.1rem/1 var(--serif); color: var(--text); text-decoration: none; margin-right: auto; white-space: nowrap; }
+.nav ul { display: flex; gap: 0.25rem; margin: 0; padding: 0; list-style: none; font: 500 0.9rem/1 var(--sans); }
+.nav ul a { display: block; padding: 0.55rem 0.65rem; color: var(--muted); text-decoration: none; border-radius: 4px; }
+.nav ul a:hover { color: var(--text); background: var(--surface); }
+.nav ul a[aria-current="true"] { color: var(--text); }
+.nav .btn { padding: 0.5rem 0.9rem; font-size: 0.875rem; }
+@media (max-width: 44rem) {
+  .nav .wrap { gap: 0.5rem; }
+  .nav ul { display: none; }
 }
+
+/* ============================== BUTTONS ============================== */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.15rem; border-radius: 4px;
+  font: 600 0.95rem/1 var(--sans); text-decoration: none; white-space: nowrap;
+  background: var(--surface); color: var(--text);
+  transition: transform .15s var(--ease), background-color .15s, color .15s;
+}
+.btn:hover { background: var(--rule); }
+.btn:active { transform: translateY(1px) scale(.98); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--text); color: var(--bg); }
+.btn svg, .links svg { width: 1.05rem; height: 1.05rem; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; flex: none; }
+
+/* ============================== HERO ============================== */
+.hero { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2.5rem; padding-block: clamp(2.5rem, 7vw, 5.5rem) clamp(3rem, 7vw, 5.5rem); align-items: center; }
+@media (min-width: 60rem) { .hero { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 3.5rem; } }
+.hero h1 { margin: 0 0 1.1rem; font: 600 clamp(3.25rem, 8.5vw, 6.25rem)/0.95 var(--serif); letter-spacing: -0.035em; }
+.lede { margin: 0 0 1.1rem; font-size: clamp(1.3rem, 2.4vw, 1.65rem); line-height: 1.35; letter-spacing: -0.01em; max-width: 30rem; }
+.affil { margin: 0 0 1.9rem; font: 0.95rem/1.55 var(--sans); color: var(--muted); max-width: 32rem; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0 0 1.6rem; }
+.links { display: flex; flex-wrap: wrap; gap: 0.35rem 1.25rem; margin: 0; padding: 0; list-style: none; font: 500 0.9rem/1.4 var(--sans); }
+.links a { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0; color: var(--muted); text-decoration: none; }
+.links a:hover { color: var(--accent); }
+
+/* Hero figure: a minimum-energy path with the band of images settling onto it */
+.mep { margin: 0; }
+.mep svg { display: block; width: 100%; height: auto; overflow: visible; }
+.mep .axis { stroke: var(--faint); stroke-width: 1.5; fill: none; }
+.mep .curve { stroke: var(--text); stroke-width: 2.5; fill: none; stroke-linecap: round; }
+.mep .bead { fill: var(--accent); }
+.mep .ts { fill: none; stroke: var(--accent); stroke-width: 2; }
+.mep text { font: 500 15px var(--sans); fill: var(--muted); }
+.mep .lbl-ts { fill: var(--text); font-weight: 600; }
+.mep figcaption { margin-top: 0.9rem; font: 0.875rem/1.5 var(--sans); color: var(--muted); max-width: 28rem; }
+.mep .bead { transform-box: fill-box; animation: settle 1.5s var(--ease) both; animation-delay: calc(.35s + var(--i) * 70ms); }
+@keyframes settle { from { transform: translateY(var(--from)); opacity: .35; } to { transform: none; opacity: 1; } }
+@media (max-width: 59.99rem) { .mep { max-width: 32rem; } }
+@media (max-width: 34rem) { .mep text { font-size: 19px; } }
+
+/* ============================== SECTIONS ============================== */
+/* Section title in a left rail on wide screens, stacked on phones */
+section.block { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; padding: clamp(3rem, 7vw, 5.5rem) 0 0; }
 @media (min-width: 52rem) {
-  section { grid-template-columns: 11rem minmax(0, 1fr); gap: 2rem; }
+  section.block { grid-template-columns: 12rem minmax(0, 1fr); gap: 2.5rem; }
+  section.block > h2 { position: sticky; top: calc(var(--nav-h) + 1.5rem); align-self: start; }
 }
+section.block > h2 { margin: 0; font: 600 clamp(1.5rem, 2.6vw, 1.85rem)/1.15 var(--serif); letter-spacing: -0.015em; }
 .body > *:first-child { margin-top: 0; }
 .body > *:last-child  { margin-bottom: 0; }
-p { margin: 0 0 1rem; max-width: var(--measure); }
+.sub { margin: 3rem 0 1.5rem; font: 600 1rem/1.4 var(--sans); color: var(--muted); }
+.body > .sub:first-child { margin-top: 0.35rem; }
 
-/* ============================== HEADER ============================== */
-.masthead { padding-bottom: 2.6rem; }
-.masthead h1 { margin: 0 0 0.5rem; font: 600 clamp(2.2rem, 5vw, 2.9rem)/1.1 var(--serif); letter-spacing: -0.01em; }
-.lede { margin: 0 0 1.6rem; font-size: 1.2rem; line-height: 1.5; color: var(--muted); max-width: 36rem; }
-.links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin: 0; padding: 0; list-style: none; font: 500 0.9rem/1.4 var(--sans); }
-.links a { display: inline-flex; align-items: center; gap: 0.4rem; color: var(--text); text-decoration: none; }
-.links a:hover { color: var(--accent); }
-.links svg { width: 1.05rem; height: 1.05rem; stroke: currentColor; fill: none; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; color: var(--muted); }
-.links a:hover svg { color: var(--accent); }
-.status { margin: 1.6rem 0 0; font: 0.9rem/1.5 var(--sans); color: var(--muted); }
-.status .cta { margin-left: 0.4rem; font-weight: 600; text-decoration: none; white-space: nowrap; }
-.status .cta:hover { text-decoration: underline; }
-.status::before { content: ""; display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--accent); margin-right: 0.55rem; vertical-align: 0.08em; }
-
-/* ============================== INTERESTS ============================== */
-.interests { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.25rem 0; }
+/* ============================== ABOUT ============================== */
+.interests { margin: 1.6rem 0 0; padding: 1.1rem 1.25rem; background: var(--surface); border-radius: 6px; max-width: var(--measure); }
+.interests h3 { margin: 0 0 0.5rem; font: 600 0.9rem/1.4 var(--sans); color: var(--muted); }
+.interests ul { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 0.2rem 0; }
 .interests li:not(:last-child)::after { content: "·"; color: var(--faint); margin: 0 0.6rem; }
 
-/* ============================== PUBLICATIONS ============================== */
-.pubgroup { margin: 0 0 0.4rem; font: 600 0.8rem/1.5 var(--sans); color: var(--muted); }
-.pubgroup:not(:first-child) { margin-top: 1.6rem; }
-.pubs { list-style: none; margin: 0; padding: 0; }
-.pubs li { margin: 0 0 1.1rem; max-width: var(--measure); }
-.pub-title { display: block; font-weight: 600; line-height: 1.4; }
-.pub-authors { display: block; color: var(--muted); font-size: 0.97rem; }
-.pub-venue { display: block; color: var(--muted); font-size: 0.97rem; font-style: italic; }
-.tags { display: inline-flex; flex-wrap: wrap; gap: 0.35rem 0.9rem; margin-top: 0.25rem; font: 500 0.82rem/1.4 var(--sans); }
-.tags a { text-decoration: none; }
-.tags a:hover { text-decoration: underline; }
-.note { font: 0.82rem/1.5 var(--sans); color: var(--faint); margin-top: 0.4rem; }
-
 /* ============================== PROJECTS ============================== */
-.project { padding: 0 0 2.4rem; margin: 0 0 2.4rem; border-bottom: 1px dashed var(--rule); }
-.project:last-child { border-bottom: 0; margin-bottom: 0; padding-bottom: 0; }
-.project h3 { margin: 0 0 0.2rem; font: 600 1.3rem/1.3 var(--serif); }
-.meta { margin: 0 0 0.9rem; font: 0.85rem/1.5 var(--sans); color: var(--muted); }
-.meta .state { color: var(--accent); font-weight: 500; }
-.project figure { margin: 1.2rem 0; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 0.9rem; }
-.project figure img { border-radius: 3px; margin: 0 auto; max-height: 28rem; width: auto; }
-@media (max-width: 34rem) { .project figure { padding: 0.6rem; margin-left: -0.25rem; margin-right: -0.25rem; } }
-.project figcaption { margin-top: 0.6rem; font: 0.8rem/1.5 var(--sans); color: var(--faint); }
-.results { display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1rem 2rem; margin: 1rem 0 1rem; padding: 0; max-width: var(--measure); }
-.results div { border-left: 2px solid var(--accent); padding-left: 0.85rem; }
-.results dt { font: 600 1.45rem/1.2 var(--serif); font-variant-numeric: lining-nums tabular-nums; color: var(--text); }
-.results dd { margin: 0.15rem 0 0; font: 0.84rem/1.45 var(--sans); color: var(--muted); }
+.project { margin: 0 0 4rem; }
+.project:last-child { margin-bottom: 0; }
+.project h3 { margin: 0 0 0.45rem; font: 600 clamp(1.3rem, 2.2vw, 1.55rem)/1.25 var(--serif); letter-spacing: -0.01em; max-width: 38rem; }
+.meta { margin: 0 0 1rem; font: 0.9rem/1.55 var(--sans); color: var(--muted); }
+.meta .state { color: var(--accent); font-weight: 600; }
+.methods { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 1.1rem; padding: 0; list-style: none; font: 500 0.82rem/1.3 var(--sans); max-width: var(--measure); }
+.methods li { padding: 0.3rem 0.55rem; background: var(--surface); color: var(--muted); border-radius: 3px; }
+.project figure { margin: 1.4rem 0 0; background: var(--surface); border-radius: 6px; padding: clamp(0.6rem, 2vw, 1.1rem); }
+.project figure img { border-radius: 3px; margin: 0 auto; max-height: 30rem; width: auto; }
+.project figcaption { margin-top: 0.75rem; font: 0.875rem/1.5 var(--sans); color: var(--muted); max-width: var(--measure); }
+.results { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem 2rem; margin: 1.3rem 0; padding: 0; max-width: var(--measure); }
+.results div { border-left: 3px solid var(--accent); padding-left: 0.9rem; }
+.results dt { font: 600 1.7rem/1.15 var(--serif); letter-spacing: -0.01em; font-variant-numeric: lining-nums tabular-nums; color: var(--text); }
+.results dd { margin: 0.25rem 0 0; font: 0.9rem/1.45 var(--sans); color: var(--muted); }
+.tags { display: flex; flex-wrap: wrap; gap: 0.35rem 1.2rem; margin: 0.6rem 0 0; font: 600 0.9rem/1.4 var(--sans); }
+.tags a { text-decoration: none; padding: 0.2rem 0; }
+.tags a::after { content: " ↗"; font-weight: 400; }
+.tags a:hover { text-decoration: underline; }
+
+/* Smaller projects: two columns on wide screens */
+.minor { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3rem 2.5rem; }
+.minor .project { margin: 0; }
+.minor .project h3 { font-size: 1.3rem; }
+@media (min-width: 60rem) { .minor { grid-template-columns: 1fr 1fr; } .minor .wide { grid-column: 1 / -1; } }
+
+/* ============================== PUBLICATIONS ============================== */
+.pubgroup { margin: 0 0 0.75rem; font: 600 1rem/1.4 var(--sans); color: var(--muted); }
+.pubgroup:not(:first-child) { margin-top: 2.2rem; }
+.pubs { list-style: none; margin: 0; padding: 0; }
+.pubs li { margin: 0 0 1.4rem; max-width: 42rem; }
+.pub-title { display: block; font-weight: 600; line-height: 1.4; }
+.pub-authors { display: block; color: var(--muted); font-size: 1rem; }
+.pub-venue { display: block; color: var(--muted); font-size: 1rem; font-style: italic; }
+.note { font: 0.875rem/1.5 var(--sans); color: var(--muted); margin-top: 0.4rem; }
 
 /* ============================== EXPERIENCE / EDUCATION ============================== */
 .rows { list-style: none; margin: 0; padding: 0; }
-.rows li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 1.5rem; padding: 0.55rem 0; }
-@media (min-width: 40rem) { .rows li { grid-template-columns: 10rem minmax(0, 1fr); } .rows .when { white-space: nowrap; } }
-.rows .when { font: 0.85rem/1.7 var(--sans); color: var(--faint); font-variant-numeric: tabular-nums; }
+.rows li { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0 1.5rem; padding: 0.7rem 0; }
+@media (min-width: 40rem) { .rows li { grid-template-columns: 9.5rem minmax(0, 1fr); } .rows .when { white-space: nowrap; } }
+.rows .when { font: 0.9rem/1.75 var(--sans); color: var(--muted); font-variant-numeric: tabular-nums; }
 .rows .what { max-width: var(--measure); }
 .rows .what span { color: var(--muted); }
 
-/* ============================== FOOTER ============================== */
-footer { border-top: 1px solid var(--rule); padding-top: 1.6rem; font: 0.85rem/1.6 var(--sans); color: var(--faint); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; }
+/* ============================== CONTACT / FOOTER ============================== */
+.contact { margin: clamp(4rem, 9vw, 7rem) 0 0; padding: clamp(2.5rem, 6vw, 4rem) 0; background: var(--surface); }
+.contact .wrap { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem 2.5rem; align-items: end; }
+@media (min-width: 52rem) { .contact .wrap { grid-template-columns: minmax(0, 1.2fr) auto; } }
+.contact h2 { margin: 0 0 0.6rem; font: 600 clamp(2rem, 4.5vw, 3.1rem)/1.05 var(--serif); letter-spacing: -0.025em; }
+.contact p { margin: 0 0 1.2rem; font-size: 1.15rem; max-width: 34rem; }
+.contact .mail { font: 600 clamp(1.05rem, 2.2vw, 1.3rem)/1.3 var(--sans); overflow-wrap: anywhere; }
+.contact .actions { margin: 0; }
+.contact .btn:not(.primary) { background: var(--bg); }
+.contact .btn:not(.primary):hover { background: var(--rule); }
+footer { padding: 1.6rem 0 2rem; font: 0.875rem/1.6 var(--sans); color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; }
 footer a { color: var(--muted); }
 
 /* Placeholder links still to be filled in: shown with a dashed outline so they cannot be missed */
 a.todo { outline: 1px dashed #c0392b; outline-offset: 2px; }
 
+/* ============================== MOTION ============================== */
+/* Content is visible without JavaScript; the reveal only runs when the script has tagged <html>. */
+.js .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s var(--ease), transform .7s var(--ease); transition-delay: var(--d, 0ms); }
+.js .reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .mep .bead { animation: none; }
+  .btn, a { transition: none; }
+}
+
 @media print {
   body { background: #fff; color: #000; }
-  .links svg, .skip { display: none; }
-  section { break-inside: avoid; }
+  .nav, .skip, .links svg, .btn svg, .mep { display: none; }
+  .contact { background: none; }
+  section.block { break-inside: avoid; }
+  .js .reveal { opacity: 1; transform: none; }
 }
 </style>
 </head>
@@ -162,61 +246,219 @@ a.todo { outline: 1px dashed #c0392b; outline-offset: 2px; }
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<div class="page">
+<!-- =====================================================================
+     NAV — section links are hidden on phones; the CV button stays.
+     ===================================================================== -->
+<nav class="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="nav-name" href="#top">Manish</a>
+    <ul>
+      <li><a href="#research">Research</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a class="btn primary" href="assets/Manish_CV.pdf">CV</a>
+  </div>
+</nav>
 
 <!-- =====================================================================
      HEADER — name, one-line description, links
      ===================================================================== -->
-<header class="masthead">
-  <h1>Manish</h1>
-  <p class="lede">Chemical engineering undergraduate at IIT Bombay, building optimisation and machine-learning methods that make atomistic simulation cheaper.</p>
+<header class="wrap hero" id="top">
+  <div>
+    <h1>Manish</h1>
+    <p class="lede">I build optimisation and machine-learning methods that make atomistic simulation cheaper.</p>
+    <p class="affil">Chemical Engineering, IIT Bombay · Minor in Artificial Intelligence and Data Science</p>
 
-  <ul class="links" aria-label="Contact and profiles">
-    <li><a href="mailto:23b0354@iitb.ac.in">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>Email</a></li>
-    <li><a href="assets/Manish_CV.pdf">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>CV (PDF)</a></li>
-    <li><a href="https://scholar.google.com/citations?user=Yt-fyAMAAAAJ">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>Google Scholar</a></li>
-    <li><a href="https://arxiv.org/abs/2511.19267">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10l4 4v12H5z"/><path d="M9 11h6M9 15h4"/></svg>arXiv</a></li>
-    <li><a href="https://github.com/Manish-785">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg>GitHub</a></li>
-    <li><a href="https://linkedin.com/in/manish-singh785">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>LinkedIn</a></li>
-    <li><a href="https://calendar.app.google/aF46NTTX1WRm9ttb7"><!-- BOOKING -->
-      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Book a call</a></li>
-  </ul>
+    <div class="actions">
+      <a class="btn primary" href="assets/Manish_CV.pdf">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></svg>CV (PDF)</a>
+      <a class="btn" href="mailto:23b0354@iitb.ac.in">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 6.5 8.5 6.5 8.5-6.5"/></svg>Email</a>
+      <a class="btn" href="#research">See research</a>
+    </div>
 
-  <!-- Booking link (Google Calendar appointment page) appears in 3 places: here, header links, footer -->
-  <p class="status">Open to research collaborations and roles in machine learning, optimisation and scientific computing. <a class="cta" href="https://calendar.app.google/aF46NTTX1WRm9ttb7">Book a 30-minute call →</a></p>
+    <!-- Booking link (Google Calendar appointment page) appears in 2 places: here and the Contact band -->
+    <ul class="links" aria-label="Profiles">
+      <li><a href="https://scholar.google.com/citations?user=Yt-fyAMAAAAJ">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2 9 10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>Google Scholar</a></li>
+      <li><a href="https://arxiv.org/abs/2511.19267">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h10l4 4v12H5z"/><path d="M9 11h6M9 15h4"/></svg>arXiv</a></li>
+      <li><a href="https://github.com/Manish-785">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg>GitHub</a></li>
+      <li><a href="https://linkedin.com/in/manish-singh785">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>LinkedIn</a></li>
+      <li><a href="https://calendar.app.google/aF46NTTX1WRm9ttb7"><!-- BOOKING -->
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Book a call</a></li>
+    </ul>
+  </div>
+
+  <!-- Schematic, not data: a reaction's minimum-energy path, with the band of images settling onto it -->
+  <figure class="mep">
+    <svg viewBox="0 0 520 306" role="img" aria-labelledby="mep-t">
+      <title id="mep-t">Schematic energy profile of a reaction: a chain of images lies along the minimum-energy path from reactant to product, crossing a barrier whose peak is the transition state.</title>
+      <path class="axis" d="M20 280V18M20 280h490"/>
+      <path class="axis" d="m14 26 6-10 6 10M500 274l10 6-10 6"/>
+      <path class="curve" d="M40.0 194.1 L44.4 196.8 L48.8 199.6 L53.2 202.4 L57.6 205.3 L62.0 207.9 L66.4 210.4 L70.8 212.4 L75.2 213.9 L79.6 214.9 L84.0 215.2 L88.4 214.9 L92.8 213.9 L97.2 212.2 L101.6 210.0 L106.0 207.3 L110.4 204.3 L114.8 200.9 L119.2 197.3 L123.6 193.6 L128.0 189.8 L132.4 186.0 L136.8 182.1 L141.2 178.2 L145.6 174.3 L150.0 170.2 L154.4 166.0 L158.8 161.6 L163.2 157.1 L167.6 152.3 L172.0 147.2 L176.4 141.8 L180.8 136.2 L185.2 130.3 L189.6 124.2 L194.0 117.9 L198.4 111.4 L202.8 104.8 L207.2 98.1 L211.6 91.5 L216.0 84.9 L220.4 78.5 L224.8 72.3 L229.2 66.5 L233.6 61.1 L238.0 56.1 L242.4 51.7 L246.8 47.9 L251.2 44.8 L255.6 42.4 L260.0 40.8 L264.4 40.0 L268.8 40.0 L273.2 40.8 L277.6 42.5 L282.0 44.9 L286.4 48.1 L290.8 52.0 L295.2 56.7 L299.6 61.9 L304.0 67.7 L308.4 73.9 L312.8 80.6 L317.2 87.6 L321.6 94.8 L326.0 102.2 L330.4 109.7 L334.8 117.3 L339.2 124.8 L343.6 132.2 L348.0 139.5 L352.4 146.7 L356.8 153.7 L361.2 160.6 L365.6 167.3 L370.0 173.9 L374.4 180.3 L378.8 186.7 L383.2 193.0 L387.6 199.2 L392.0 205.3 L396.4 211.3 L400.8 217.2 L405.2 222.9 L409.6 228.3 L414.0 233.3 L418.4 237.8 L422.8 241.7 L427.2 244.9 L431.6 247.4 L436.0 249.0 L440.4 249.9 L444.8 250.0 L449.2 249.4 L453.6 248.3 L458.0 246.6 L462.4 244.7 L466.8 242.6 L471.2 240.4 L475.6 238.2 L480.0 236.2"/>
+      <circle class="ts" cx="260" cy="40.8" r="12"/>
+      <circle class="bead" cx="84" cy="215.2" r="6" style="--i:0;--from:0px"/>
+      <circle class="bead" cx="128" cy="189.8" r="6" style="--i:1;--from:-18px"/>
+      <circle class="bead" cx="172" cy="147.2" r="6" style="--i:2;--from:-32px"/>
+      <circle class="bead" cx="216" cy="84.9" r="6" style="--i:3;--from:-42px"/>
+      <circle class="bead" cx="260" cy="40.8" r="6" style="--i:4;--from:-46px"/>
+      <circle class="bead" cx="304" cy="67.7" r="6" style="--i:5;--from:-42px"/>
+      <circle class="bead" cx="348" cy="139.5" r="6" style="--i:6;--from:-32px"/>
+      <circle class="bead" cx="392" cy="205.3" r="6" style="--i:7;--from:-18px"/>
+      <circle class="bead" cx="436" cy="249" r="6" style="--i:8;--from:0px"/>
+      <text class="lbl-ts" x="290" y="30">Transition state</text>
+      <text x="58" y="246">Reactant</text>
+      <text x="452" y="218">Product</text>
+      <text x="32" y="22">Energy</text>
+      <text x="510" y="300" text-anchor="end">Reaction coordinate</text>
+    </svg>
+    <figcaption>Schematic of what my main project optimises: the nudged elastic band relaxes a chain of images onto the minimum-energy path to locate the transition state.</figcaption>
+  </figure>
 </header>
 
-<main id="main">
+<main id="main" class="wrap">
 
 <!-- =====================================================================
-     ABOUT
+     ABOUT (research interests sit inside it)
      ===================================================================== -->
-<section id="about" aria-labelledby="about-h">
-  <h2 id="about-h">About</h2>
-  <div class="body">
+<section class="block" id="about" aria-labelledby="about-h">
+  <h2 id="about-h" class="reveal">About</h2>
+  <div class="body reveal" style="--d:80ms">
     <p>I am a final-year B.Tech. student in Chemical Engineering at IIT Bombay, with a minor in Artificial Intelligence and Data Science. My main project, with Prof. Sudarshan Vijay, is an optimiser that uses curvature from a machine-learned interatomic potential to find reaction transition states with far fewer force evaluations than the standard method. With Prof. Saket Choudhary I also study how heat shapes maternal and newborn deaths across India, using district-level health records from 2009 to 2024.</p>
-    <p>I am looking for research roles in AI for science, especially machine learning for atomistic simulation and materials, where better numerical methods make simulation cheaper and more reliable. If that overlaps with your work, I would be glad to talk.</p>
+    <p>I am most interested in AI for science, especially machine learning for atomistic simulation and materials, where better numerical methods make simulation cheaper and more reliable. If that overlaps with your work, I would be glad to talk.</p>
+    <div class="interests" id="interests">
+      <h3>Research interests</h3>
+      <ul>
+        <li>Numerical optimisation</li>
+        <li>Transition-state search</li>
+        <li>Machine-learned interatomic potentials</li>
+        <li>Scientific machine learning</li>
+      </ul>
+    </div>
   </div>
 </section>
 
 <!-- =====================================================================
-     RESEARCH INTERESTS
+     RESEARCH & PROJECTS — one <article> per project.
+     Figures: put the image in assets/ and set src + alt. If the file is
+     missing, the figure hides itself so the page never shows a broken image.
+     Methods: short list of the techniques/tools named in the description.
      ===================================================================== -->
-<section id="interests" aria-labelledby="interests-h">
-  <h2 id="interests-h">Interests</h2>
+<section class="block" id="research" aria-labelledby="research-h">
+  <h2 id="research-h" class="reveal">Research &amp; projects</h2>
   <div class="body">
-    <ul class="interests">
-      <li>Numerical optimisation</li>
-      <li>Transition-state search</li>
-      <li>Machine-learned interatomic potentials</li>
-      <li>Scientific machine learning</li>
-    </ul>
+
+    <h3 class="sub reveal">Research</h3>
+
+    <!-- ---------- Project 1: NEB optimiser ---------- -->
+    <article class="project reveal" aria-labelledby="p-neb">
+      <h3 id="p-neb">Finding transition states with machine-learned curvature</h3>
+      <p class="meta"><span class="state">Ongoing</span> · B.Tech. project with Prof. Sudarshan Vijay, IIT Bombay · since May 2025</p>
+      <ul class="methods" aria-label="Methods">
+        <li>Nudged elastic band</li><li>MACE-MP-0</li><li>Hessian preconditioning</li><li>Safeguarded L-BFGS</li>
+      </ul>
+      <p>The nudged elastic band (NEB) method finds the lowest-energy path of a reaction and its transition state, but each step needs expensive force calls, usually from DFT. I precondition the optimiser with the Hessian of a machine-learned potential (MACE-MP-0): projected onto the directions perpendicular to the path and paired with an analytical spring-force Jacobian along it, inside a safeguarded L-BFGS. Getting this to work meant diagnosing why curvature-based preconditioning breaks down near a saddle point, where the Hessian is indefinite and the two subspaces leak into each other.</p>
+      <dl class="results">
+        <div><dt>22 / 31</dt><dd>held-out systems converged, vs. 14 / 31 for FIRE, on a sealed set fixed before testing</dd></div>
+        <div><dt>0.18×</dt><dd>FIRE’s band evaluations (median, 95% CI 0.14–0.23) where both converged</dd></div>
+      </dl>
+      <figure>
+        <picture>
+          <source media="(max-width: 34rem)" srcset="assets/neb_benchmark_narrow.svg">
+          <img src="assets/neb_benchmark.svg" width="720" height="280" loading="lazy"
+             alt="Bar charts comparing the ML-Hessian optimiser with FIRE. Systems converged: 33 versus 28 of 60 overall, 22 versus 14 of 31 held-out, 11 versus 7 of 26 surface reactions. Median band evaluations relative to FIRE: 0.18, 95% CI 0.14 to 0.23."
+             onerror="this.closest('figure').hidden=true">
+        </picture>
+        <figcaption>60-system benchmark (OC20NEB surface reactions, Transition1x gas-phase reactions, diffusion and conformer changes) with MACE forces. Evaluation counts exclude Hessian construction. Validation with DFT forces is in progress.</figcaption>
+      </figure>
+    </article>
+
+    <!-- ---------- Project 2: HMIS seasonality ---------- -->
+    <article class="project reveal" aria-labelledby="p-hmis">
+      <h3 id="p-hmis">The hot-season peak in maternal and newborn deaths in India</h3>
+      <p class="meta"><span class="state">Manuscript in preparation</span> · R&amp;D project with Prof. Saket Choudhary, Koita Centre for Digital Health, IIT Bombay</p>
+      <ul class="methods" aria-label="Methods">
+        <li>Poisson fixed-effects models</li><li>ERA5 climate data</li><li>NFHS-5</li><li>772 districts, 2009–2024</li>
+      </ul>
+      <p>Births in India are seasonal, but deaths of mothers and newborns follow a different calendar. Using district-month health records for 772 districts from 2009 to 2024, linked to ERA5 climate and NFHS-5 survey data, I show that deaths per birth peak every year in May–July, the hottest months. Poisson models with district-by-year fixed effects compare each district only with itself; the peak survives five different birth registers as denominators, and the neonatal peak appears independently in the national household survey (NFHS-5).</p>
+      <dl class="results">
+        <div><dt>+42% / +22%</dt><dd>maternal / neonatal deaths per birth in May–July vs. February–March</dd></div>
+        <div><dt>69%</dt><dd>of the maternal seasonal pattern reproduced by temperature alone</dd></div>
+      </dl>
+      <figure>
+        <img src="assets/hmis_seasonality.png" width="1400" height="616" loading="lazy"
+             alt="Line charts by calendar month for maternal and neonatal deaths: births, deaths and deaths per birth relative to the annual mean. Deaths per birth rise sharply from March and peak in May to July, while births peak later, in August to October."
+             onerror="this.closest('figure').hidden=true">
+        <figcaption>Births, deaths and deaths per birth by month, relative to each district’s annual mean in the same year. Shaded: May–July.</figcaption>
+      </figure>
+    </article>
+
+    <h3 class="sub reveal">Selected projects</h3>
+
+    <div class="minor">
+
+      <!-- ---------- Project 4: STGNN ---------- -->
+      <article class="project wide reveal" aria-labelledby="p-gnn">
+        <h3 id="p-gnn">Spatiotemporal graph neural networks for multi-store forecasting</h3>
+        <p class="meta"><span class="state">Preprint</span> · Course project, EE782, with Prof. Amit Sethi · with Arpita Dayama · Aug–Nov 2025</p>
+        <ul class="methods" aria-label="Methods">
+          <li>Spatiotemporal GNN</li><li>Learned adjacency</li><li>Dilated temporal convolutions</li><li>ARIMA · XGBoost · LSTM baselines</li>
+        </ul>
+        <p>Retail stores share trends, so forecasting them one at a time throws information away. We forecast weekly sales for 45 Walmart stores jointly with a spatiotemporal GNN that learns its own store-to-store graph, combining dilated temporal convolutions with graph convolution, and compared it with ARIMA, XGBoost and LSTM under identical features and splits. The learned graph recovered functional groups of stores without any location data.</p>
+        <dl class="results">
+          <div><dt>2.08%</dt><dd>MAPE on Store 37, nearly 50% lower than ARIMA</dd></div>
+        </dl>
+        <figure>
+          <img src="assets/gnn_learned_graph.png" width="1049" height="798" loading="lazy"
+               alt="Heatmap of the learned store-to-store adjacency matrix for 45 stores, ordered by hierarchical clustering with a dendrogram, showing a few strongly connected blocks of stores."
+               onerror="this.closest('figure').hidden=true">
+          <figcaption>Learned spatial dependencies between stores, ordered by hierarchical clustering.</figcaption>
+        </figure>
+        <p class="tags">
+          <a href="https://arxiv.org/abs/2511.19267">arXiv</a>
+          <a href="https://github.com/Manish-785/sales-demand-forecasting">Code</a>
+        </p>
+      </article>
+
+      <!-- ---------- Project 3: Quant Auditor ---------- -->
+      <article class="project reveal" aria-labelledby="p-qa">
+        <h3 id="p-qa">Quant Auditor: a small language model that audits trading backtests</h3>
+        <p class="meta"><span class="state">Ongoing</span> · Course project, IE624 Generative and Agentic AI · team of two, with Arpita</p>
+        <ul class="methods" aria-label="Methods">
+          <li>LLM agents</li><li>Qwen3-4B fine-tuning</li><li>Matched-pair training data</li>
+        </ul>
+        <p>A trading strategy can look profitable only because of hidden mistakes such as look-ahead, ignored trading costs or in-sample tuning. I am building an auditor agent that investigates strategy code by running experiments on it, with one rule: no number reaches the user unless it is cited to its source or produced by an executed test. It is trained on flawed backtests paired with clean controls that differ in exactly one detail, using a fine-tuned Qwen3-4B on free GPUs.</p>
+        <dl class="results">
+          <div><dt>~70%</dt><dd>of 30 popular public backtest notebooks that simulate profits had at least one major flaw (audited by hand)</dd></div>
+          <div><dt>2,921</dt><dd>matched pairs of flawed and clean backtests on 20 years of real prices</dd></div>
+        </dl>
+        <!-- Figure: add when ready, e.g.
+        <figure><img src="assets/quant_auditor.png" alt="..." loading="lazy" onerror="this.closest('figure').hidden=true"><figcaption>...</figcaption></figure> -->
+        <!-- Code link: add when the repository is public, e.g. <p class="tags"><a href="https://github.com/...">Code</a></p> -->
+      </article>
+
+      <!-- ---------- Project 5: GenAI drug discovery ---------- -->
+      <article class="project reveal" aria-labelledby="p-drug" style="--d:80ms">
+        <h3 id="p-drug">Generative AI for drug discovery</h3>
+        <p class="meta"><span class="state">1st of 64,000+ participants</span> · Google Solution Challenge 2025 · team project</p>
+        <ul class="methods" aria-label="Methods">
+          <li>BiLSTM with attention</li><li>BindingDB (550K+)</li><li>DiffDock</li><li>MolFormer</li>
+        </ul>
+        <p>A protein-conditioned recurrent network generates candidate molecules for a given target: a bidirectional LSTM with attention encodes the protein, and the generator is trained on 550K+ BindingDB samples. Candidates are ranked on drug-likeness, toxicity, solubility and predicted binding, using DiffDock and MolFormer.</p>
+        <dl class="results">
+          <div><dt>100% / 99.7%</dt><dd>validity / uniqueness of generated molecules</dd></div>
+        </dl>
+        <!-- Figure: add when ready, e.g.
+        <figure><img src="assets/drug_discovery.png" alt="..." loading="lazy" onerror="this.closest('figure').hidden=true"><figcaption>...</figcaption></figure> -->
+        <!-- Code/demo link: add here if the MolGenX repository or demo becomes public -->
+      </article>
+
+    </div>
   </div>
 </section>
 
@@ -224,11 +466,11 @@ a.todo { outline: 1px dashed #c0392b; outline-offset: 2px; }
      PUBLICATIONS — to add a paper, copy one <li> block.
      Mark your name with <strong>. * = equal contribution.
      ===================================================================== -->
-<section id="publications" aria-labelledby="pubs-h">
-  <h2 id="pubs-h">Publications</h2>
-  <div class="body">
+<section class="block" id="publications" aria-labelledby="pubs-h">
+  <h2 id="pubs-h" class="reveal">Publications</h2>
+  <div class="body reveal" style="--d:80ms">
 
-    <p class="pubgroup">Preprints</p>
+    <h3 class="pubgroup">Preprints</h3>
     <ol class="pubs">
       <li>
         <span class="pub-title">Leveraging spatial-temporal graph neural networks for multi-store sales forecasting</span>
@@ -251,7 +493,7 @@ a.todo { outline: 1px dashed #c0392b; outline-offset: 2px; }
       </li>
     </ol>
 
-    <p class="pubgroup">In preparation</p>
+    <h3 class="pubgroup">In preparation</h3>
     <ol class="pubs">
       <li>
         <span class="pub-title">Machine-learned Hessian preconditioning for nudged elastic band transition-state searches</span>
@@ -269,115 +511,11 @@ a.todo { outline: 1px dashed #c0392b; outline-offset: 2px; }
 </section>
 
 <!-- =====================================================================
-     PROJECTS — one <article> per project.
-     Figures: put the image in assets/ and set src + alt. If the file is
-     missing, the figure hides itself so the page never shows a broken image.
-     ===================================================================== -->
-<section id="projects" aria-labelledby="projects-h">
-  <h2 id="projects-h">Research &amp; projects</h2>
-  <div class="body">
-
-    <!-- ---------- Project 1: NEB optimiser ---------- -->
-    <article class="project" aria-labelledby="p-neb">
-      <h3 id="p-neb">Finding transition states with machine-learned curvature</h3>
-      <p class="meta"><span class="state">Ongoing</span> · B.Tech. project with Prof. Sudarshan Vijay, IIT Bombay · since May 2025</p>
-      <p>The nudged elastic band (NEB) method finds the lowest-energy path of a reaction and its transition state, but each step needs expensive force calls, usually from DFT. I precondition the optimiser with the Hessian of a machine-learned potential (MACE-MP-0): projected onto the directions perpendicular to the path and paired with an analytical spring-force Jacobian along it, inside a safeguarded L-BFGS. Getting this to work meant diagnosing why curvature-based preconditioning breaks down near a saddle point, where the Hessian is indefinite and the two subspaces leak into each other.</p>
-      <dl class="results">
-        <div><dt>22 / 31</dt><dd>held-out systems converged, vs. 14 / 31 for FIRE, on a sealed set fixed before testing</dd></div>
-        <div><dt>0.18×</dt><dd>FIRE’s band evaluations (median, 95% CI 0.14–0.23) where both converged</dd></div>
-      </dl>
-      <figure>
-        <picture>
-          <source media="(max-width: 34rem)" srcset="assets/neb_benchmark_narrow.svg">
-          <img src="assets/neb_benchmark.svg" width="720" height="280" loading="lazy"
-             alt="Bar charts comparing the ML-Hessian optimiser with FIRE. Systems converged: 33 versus 28 of 60 overall, 22 versus 14 of 31 held-out, 11 versus 7 of 26 surface reactions. Median band evaluations relative to FIRE: 0.18, 95% CI 0.14 to 0.23."
-             onerror="this.closest('figure').hidden=true">
-        </picture>
-        <figcaption>60-system benchmark (OC20NEB surface reactions, Transition1x gas-phase reactions, diffusion and conformer changes) with MACE forces. Evaluation counts exclude Hessian construction. Validation with DFT forces is in progress.</figcaption>
-      </figure>
-    </article>
-
-    <!-- ---------- Project 2: HMIS seasonality ---------- -->
-    <article class="project" aria-labelledby="p-hmis">
-      <h3 id="p-hmis">The hot-season peak in maternal and newborn deaths in India</h3>
-      <p class="meta"><span class="state">Manuscript in preparation</span> · R&amp;D project with Prof. Saket Choudhary, Koita Centre for Digital Health, IIT Bombay</p>
-      <p>Births in India are seasonal, but deaths of mothers and newborns follow a different calendar. Using district-month health records for 772 districts from 2009 to 2024, linked to ERA5 climate and NFHS-5 survey data, I show that deaths per birth peak every year in May–July, the hottest months. Poisson models with district-by-year fixed effects compare each district only with itself; the peak survives five different birth registers as denominators, and the neonatal peak appears independently in the national household survey (NFHS-5).</p>
-      <dl class="results">
-        <div><dt>+42% / +22%</dt><dd>maternal / neonatal deaths per birth in May–July vs. February–March</dd></div>
-        <div><dt>69%</dt><dd>of the maternal seasonal pattern reproduced by temperature alone</dd></div>
-      </dl>
-      <figure>
-        <img src="assets/hmis_seasonality.png" width="1400" height="616" loading="lazy"
-             alt="Line charts by calendar month for maternal and neonatal deaths: births, deaths and deaths per birth relative to the annual mean. Deaths per birth rise sharply from March and peak in May to July, while births peak later, in August to October."
-             onerror="this.closest('figure').hidden=true">
-        <figcaption>Births, deaths and deaths per birth by month, relative to each district’s annual mean in the same year. Shaded: May–July.</figcaption>
-      </figure>
-    </article>
-
-    <!-- ---------- Project 3: Quant Auditor ---------- -->
-    <article class="project" aria-labelledby="p-qa">
-      <h3 id="p-qa">Quant Auditor: a small language model that audits trading backtests</h3>
-      <p class="meta"><span class="state">Ongoing</span> · Course project, IE624 Generative and Agentic AI · team of two, with Arpita</p>
-      <p>A trading strategy can look profitable only because of hidden mistakes such as look-ahead, ignored trading costs or in-sample tuning. I am building an auditor agent that investigates strategy code by running experiments on it, with one rule: no number reaches the user unless it is cited to its source or produced by an executed test. It is trained on flawed backtests paired with clean controls that differ in exactly one detail, using a fine-tuned Qwen3-4B on free GPUs.</p>
-      <dl class="results">
-        <div><dt>~70%</dt><dd>of 30 popular public backtest notebooks that simulate profits had at least one major flaw (audited by hand)</dd></div>
-        <div><dt>2,921</dt><dd>matched pairs of flawed and clean backtests on 20 years of real prices</dd></div>
-      </dl>
-      <figure>
-        <img src="assets/quant_auditor.png" loading="lazy"
-             alt="[ADD ALT TEXT] Quant Auditor figure"
-             onerror="this.closest('figure').hidden=true">
-        <figcaption>[ADD CAPTION]</figcaption>
-      </figure>
-      <!-- Code link: add when the repository is public, e.g. <p class="tags"><a href="https://github.com/...">Code</a></p> -->
-    </article>
-
-    <!-- ---------- Project 4: STGNN ---------- -->
-    <article class="project" aria-labelledby="p-gnn">
-      <h3 id="p-gnn">Spatiotemporal graph neural networks for multi-store forecasting</h3>
-      <p class="meta"><span class="state">Preprint</span> · Course project, EE782, with Prof. Amit Sethi · with Arpita Dayama · Aug–Nov 2025</p>
-      <p>Retail stores share trends, so forecasting them one at a time throws information away. We forecast weekly sales for 45 Walmart stores jointly with a spatiotemporal GNN that learns its own store-to-store graph, combining dilated temporal convolutions with graph convolution, and compared it with ARIMA, XGBoost and LSTM under identical features and splits. The learned graph recovered functional groups of stores without any location data.</p>
-      <dl class="results">
-        <div><dt>2.08%</dt><dd>MAPE on Store 37, nearly 50% lower than ARIMA</dd></div>
-      </dl>
-      <figure>
-        <img src="assets/gnn_learned_graph.png" width="1049" height="798" loading="lazy"
-             alt="Heatmap of the learned store-to-store adjacency matrix for 45 stores, ordered by hierarchical clustering with a dendrogram, showing a few strongly connected blocks of stores."
-             onerror="this.closest('figure').hidden=true">
-        <figcaption>Learned spatial dependencies between stores, ordered by hierarchical clustering.</figcaption>
-      </figure>
-      <p class="tags">
-        <a href="https://arxiv.org/abs/2511.19267">arXiv</a>
-        <a href="https://github.com/Manish-785/sales-demand-forecasting">Code</a>
-      </p>
-    </article>
-
-    <!-- ---------- Project 5: GenAI drug discovery ---------- -->
-    <article class="project" aria-labelledby="p-drug">
-      <h3 id="p-drug">Generative AI for drug discovery</h3>
-      <p class="meta"><span class="state">1st of 64,000+ participants</span> · Google Solution Challenge 2025 · team project</p>
-      <p>A protein-conditioned recurrent network generates candidate molecules for a given target: a bidirectional LSTM with attention encodes the protein, and the generator is trained on 550K+ BindingDB samples. Candidates are ranked on drug-likeness, toxicity, solubility and predicted binding, using DiffDock and MolFormer.</p>
-      <dl class="results">
-        <div><dt>100% / 99.7%</dt><dd>validity / uniqueness of generated molecules</dd></div>
-      </dl>
-      <figure>
-        <img src="assets/drug_discovery.png" loading="lazy"
-             alt="[ADD ALT TEXT] drug discovery figure"
-             onerror="this.closest('figure').hidden=true">
-        <figcaption>[ADD CAPTION]</figcaption>
-      </figure>
-      <!-- Code/demo link: add here if the MolGenX repository or demo becomes public -->
-    </article>
-
-  </div>
-</section>
-
-<!-- =====================================================================
      EXPERIENCE — one <li> per role
      ===================================================================== -->
-<section id="experience" aria-labelledby="exp-h">
-  <h2 id="exp-h">Experience</h2>
-  <div class="body">
+<section class="block" id="experience" aria-labelledby="exp-h">
+  <h2 id="exp-h" class="reveal">Experience</h2>
+  <div class="body reveal" style="--d:80ms">
     <ol class="rows">
       <li><span class="when">May–Jul 2026</span>
           <span class="what"><strong>Summer Associate, Asia FX Structuring</strong>, Morgan Stanley<br>
@@ -398,9 +536,9 @@ a.todo { outline: 1px dashed #c0392b; outline-offset: 2px; }
 <!-- =====================================================================
      EDUCATION AND HONOURS
      ===================================================================== -->
-<section id="education" aria-labelledby="edu-h">
-  <h2 id="edu-h">Education &amp; honours</h2>
-  <div class="body">
+<section class="block" id="education" aria-labelledby="edu-h">
+  <h2 id="edu-h" class="reveal">Education &amp; honours</h2>
+  <div class="body reveal" style="--d:80ms">
     <ol class="rows">
       <li><span class="when">2023–2027</span>
           <span class="what"><strong>B.Tech. in Chemical Engineering</strong>, Indian Institute of Technology Bombay<br>
@@ -420,13 +558,65 @@ a.todo { outline: 1px dashed #c0392b; outline-offset: 2px; }
 </main>
 
 <!-- =====================================================================
+     CONTACT
+     ===================================================================== -->
+<section class="contact" id="contact" aria-labelledby="contact-h">
+  <div class="wrap">
+    <div class="reveal">
+      <h2 id="contact-h">Let’s talk</h2>
+      <p>Open to research collaborations and conversations about machine learning, optimisation and scientific computing.</p>
+      <a class="mail" href="mailto:23b0354@iitb.ac.in">23b0354@iitb.ac.in</a>
+    </div>
+    <div class="actions reveal" style="--d:80ms">
+      <a class="btn primary" href="https://calendar.app.google/aF46NTTX1WRm9ttb7">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>Book a 30-minute call</a>
+      <a class="btn" href="assets/Manish_CV.pdf">CV (PDF)</a>
+    </div>
+  </div>
+</section>
+
+<!-- =====================================================================
      FOOTER — update the date when you change the page
      ===================================================================== -->
 <footer>
-  <span><a href="mailto:23b0354@iitb.ac.in">23b0354@iitb.ac.in</a> · <a href="https://calendar.app.google/aF46NTTX1WRm9ttb7">Book a call</a></span>
-  <span>Last updated October 2026</span>
+  <div class="wrap">
+    <span>Manish · IIT Bombay</span>
+    <span>Last updated October 2026</span>
+  </div>
 </footer>
 
-</div>
+<script>
+(function () {
+  // Reveal sections as they enter; without IntersectionObserver everything is shown at once.
+  var items = document.querySelectorAll('.reveal');
+  if (!('IntersectionObserver' in window)) { items.forEach(function (el) { el.classList.add('in'); }); return; }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: 0 });
+  items.forEach(function (el) { io.observe(el); });
+
+  // Nav: shadow once the page scrolls, and mark the section being read.
+  var nav = document.querySelector('.nav');
+  var links = {};
+  var onScroll = function () {
+    nav.classList.toggle('scrolled', window.scrollY > 8);
+    if (window.scrollY < 200) Object.keys(links).forEach(function (k) { links[k].removeAttribute('aria-current'); });
+  };
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  document.querySelectorAll('.nav ul a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
+  onScroll();
+  var spy = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      var a = links[e.target.id]; if (!a) return;
+      if (e.isIntersecting) {
+        Object.keys(links).forEach(function (k) { links[k].removeAttribute('aria-current'); });
+        a.setAttribute('aria-current', 'true');
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  Object.keys(links).forEach(function (id) { var s = document.getElementById(id); if (s) spy.observe(s); });
+})();
+</script>
 </body>
 </html>
