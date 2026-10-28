@@ -36,8 +36,9 @@
 :root {
   --paper: #f3f3f0;  --paper-ink: #0c0d12;  --paper-soft: #55565c;
   --blue:  #1423b8;  --blue-ink: #ffffff;   --blue-soft: #c6cbf6;  --blue-2: #1220a6;
-  --black: #08080a;  --black-ink: #ffffff;  --black-soft: #a8a8ad;
-  --yellow:#f7dd47;  --yellow-ink: #0c0d12; --yellow-soft: #4b4413;
+  --stone: #e6e5e0;  --stone-soft: #4f5056;
+  --black: #0c0d12;  --black-ink: #ffffff;  --black-soft: #a8a8ad;
+  --mark:  #dde1fb;
 
   --font: "General Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
   /* five type steps */
@@ -54,7 +55,7 @@
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
 @media (prefers-color-scheme: dark) {
-  :root { --paper: #131418; --paper-ink: #ececec; --paper-soft: #a3a3a6; --over: #8f9bff; }
+  :root { --paper: #131418; --paper-ink: #ececec; --paper-soft: #a3a3a6; --over: #8f9bff; --stone: #1c1d22; --stone-soft: #a8a8ad; --mark: #26307a; }
 }
 
 /* ============================== BASE ============================== */
@@ -74,9 +75,9 @@ strong { font-weight: 600; }
 
 /* Fields: each sets the ink, soft ink and button colours for everything inside it */
 .f-paper  { background: var(--paper);  color: var(--paper-ink);  --soft: var(--paper-soft);  --btn: var(--blue);   --btn-ink: #fff;        --panel: color-mix(in srgb, var(--paper-ink) 5%, var(--paper)); }
-.f-blue   { background: var(--blue);   color: var(--blue-ink);   --soft: var(--blue-soft);   --btn: var(--yellow); --btn-ink: #0c0d12;     --panel: var(--blue-2); }
-.f-black  { background: var(--black);  color: var(--black-ink);  --soft: var(--black-soft);  --btn: var(--yellow); --btn-ink: #0c0d12;     --panel: #17171b; }
-.f-yellow { background: var(--yellow); color: var(--yellow-ink); --soft: var(--yellow-soft); --btn: var(--yellow-ink); --btn-ink: var(--yellow); --panel: #efd43b; }
+.f-stone  { background: var(--stone);  color: var(--paper-ink);  --soft: var(--stone-soft);  --btn: var(--blue);   --btn-ink: #fff;        --panel: var(--paper); }
+.f-blue   { background: var(--blue);   color: var(--blue-ink);   --soft: var(--blue-soft);   --btn: #fff;          --btn-ink: var(--blue); --panel: var(--blue-2); }
+.f-black  { background: var(--black);  color: var(--black-ink);  --soft: var(--black-soft);  --btn: #fff;          --btn-ink: var(--black); --panel: #17181d; }
 
 .wrap { padding-inline: var(--m); }
 .grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
@@ -122,10 +123,10 @@ strong { font-weight: 600; }
   margin: 0 auto; max-width: 36rem; text-align: center; color: #fff; font-size: var(--s-lead); line-height: 1.3;
 }
 .hero-sub .btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; margin-top: 1.4rem; font-size: 1rem; }
-.hero-sub .btn { --btn: var(--yellow); --btn-ink: #0c0d12; }
+.hero-sub .btn { --btn: #fff; --btn-ink: var(--blue); }
 .hero-sub .btn.alt { --btn: var(--blue-2); --btn-ink: #fff; }
 @media (max-width: 40rem) {
-  .hero { --seam: 46%; }
+  .hero { --seam: 48%; height: 80svh; min-height: 30rem; }
   .headline { font-size: 17vw; }
   .hero-sub { font-size: 1.125rem; max-width: 30ch; }
 }
@@ -162,40 +163,49 @@ strong { font-weight: 600; }
 .figs dd { margin: 0.6rem 0 0; max-width: 24rem; color: var(--soft); font-size: 1rem; }
 
 /* The benchmark explorer: pick a test set, compare systems converged. Works without JavaScript. */
-.bench { grid-column: 1 / -1; margin-top: clamp(1.5rem, 3vw, 2.5rem); padding: clamp(1.25rem, 3vw, 2.5rem); background: var(--blue); color: #fff; --soft: var(--blue-soft); }
+.bench { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 2rem clamp(2rem, 4vw, 4rem); margin-top: clamp(1.5rem, 3vw, 2.5rem); padding: clamp(1.25rem, 3vw, 2.5rem); background: var(--blue); color: #fff; --soft: var(--blue-soft); }
+.bench .fine { grid-column: 1 / -1; }
+@media (max-width: 52rem) { .bench { grid-template-columns: minmax(0, 1fr); } }
+.evals h4 { margin: 0 0 0.25rem; font-size: var(--s-lead); font-weight: 600; letter-spacing: -0.01em; }
+.evals > p { margin: 0 0 1.4rem; font-size: var(--s-small); color: var(--soft); }
+.evals .big { display: block; margin: 0 0 1.4rem; font-size: var(--s-head); font-weight: 600; line-height: 1; letter-spacing: -0.03em; }
+.evals .big small { font-size: var(--s-small); font-weight: 500; letter-spacing: 0; color: var(--soft); }
+.evals .bar { grid-template-columns: 5.5rem minmax(0, 1fr) 3rem; }
+.evals .track { position: relative; }
+.ci { position: absolute; top: 50%; height: 0.9rem; transform: translateY(-50%); border: 2px solid var(--blue); border-block: 0; }
+.ci::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid var(--blue); }
 .bench fieldset { border: 0; margin: 0 0 1.75rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .bench legend { padding: 0; margin-bottom: 0.9rem; font-size: var(--s-lead); font-weight: 600; letter-spacing: -0.01em; }
 .bench input { position: absolute; opacity: 0; }
 .bench label { padding: 0.6em 1em; background: var(--blue-2); cursor: pointer; font-weight: 500; transition: background-color .15s, color .15s; }
 .bench label:hover { background: #0e1a8c; }
-.bench input:checked + label { background: var(--yellow); color: #0c0d12; }
+.bench input:checked + label { background: #fff; color: var(--blue); }
 .bench input:focus-visible + label { outline: 3px solid #fff; outline-offset: 3px; }
 .bench .set { display: none; }
 .bench:has(#set-all:checked) .all, .bench:has(#set-held:checked) .held, .bench:has(#set-surf:checked) .surf { display: block; }
 .bar { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr) 6.5rem; align-items: center; gap: 1rem; margin-bottom: 0.9rem; }
 .bar .track, .bar .fill { display: block; }
 .bar .track { height: 2.4rem; background: var(--blue-2); }
-.bar .fill { height: 100%; background: var(--yellow); transform-origin: left; transform: scaleX(var(--v)); animation: grow .8s var(--ease) both; }
-.bar.fire .fill { background: var(--blue-soft); }
+.bar .fill { height: 100%; background: #fff; transform-origin: left; transform: scaleX(var(--v)); animation: grow .8s var(--ease) both; }
+.bar.fire .fill { background: color-mix(in srgb, var(--blue-soft) 55%, var(--blue-2)); }
 .bar .n { font-size: var(--s-lead); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
 .bar .n small { font-size: var(--s-small); font-weight: 400; color: var(--soft); }
 @keyframes grow { from { transform: scaleX(0); } }
 .bench .fine { margin: 1.4rem 0 0; font-size: var(--s-small); color: var(--soft); max-width: 46rem; }
 @media (max-width: 34rem) {
-  .bar { grid-template-columns: minmax(0, 1fr) auto; gap: 0.35rem 0.6rem; margin-bottom: 1.1rem; }
+  .bar, .evals .bar { grid-template-columns: minmax(0, 1fr) auto; gap: 0.35rem 0.6rem; margin-bottom: 1.1rem; }
   .bar .track { grid-column: 1 / -1; grid-row: 2; height: 1.75rem; }
 }
 
 .study figure { grid-column: 1 / -1; margin: clamp(1.5rem, 3vw, 2.5rem) 0 0; }
 .study figure .frame { background: #fff; padding: clamp(0.5rem, 2vw, 1.5rem); }
-.study figure .frame.svg { background: var(--panel); }
 .study figure img { margin: 0 auto; max-height: 34rem; width: auto; }
 .study figcaption { margin-top: 0.8rem; font-size: var(--s-small); color: var(--soft); max-width: 46rem; }
 
-/* ============================== PROJECTS (black ledger) ============================== */
+/* ============================== PROJECTS (stone ledger) ============================== */
 .projects { padding-block: var(--sec); }
-.ledger { grid-column: 3 / -1; margin: 0; padding: 0; list-style: none; }
-.projects .chapter { grid-column: 3 / -1; }
+.ledger { grid-column: 5 / -1; grid-row: 1; margin: 0; padding: 0; list-style: none; }
+.projects .chapter { grid-column: 1 / 5; grid-row: 1; margin-bottom: 0; padding-top: 1rem; align-self: start; position: sticky; top: calc(var(--head-h) + 2rem); }
 .ledger details { padding-block: 0.4rem; }
 .ledger summary {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) 7rem 1.5rem; gap: 1rem; align-items: baseline;
@@ -208,11 +218,12 @@ strong { font-weight: 600; }
 .ledger summary .tog { font-size: var(--s-lead); line-height: 1; text-align: right; transition: transform .25s var(--ease); }
 .ledger details[open] .tog { transform: rotate(45deg); }
 .ledger:hover summary, .ledger:focus-within summary { color: var(--soft); }
-.ledger:hover summary:hover, .ledger summary:focus-visible, .ledger details[open] summary { color: var(--black-ink); }
+.ledger:hover summary:hover, .ledger summary:focus-visible, .ledger details[open] summary { color: var(--paper-ink); }
 .ledger details:not([open]) .more { display: none; }
 .ledger .more { padding: 0.5rem 0 2.5rem; max-width: 46rem; }
 .ledger .more .meta { font-size: var(--s-small); color: var(--soft); }
-.ledger .more .meta b { color: var(--yellow); font-weight: 600; }
+.ledger .more .meta b { color: var(--blue); font-weight: 600; }
+@media (prefers-color-scheme: dark) { .ledger .more .meta b { color: #8f9bff; } }
 .ledger .figs dt { font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem); }
 .ledger figure { margin: 1.8rem 0 0; }
 .ledger figure .frame { background: #fff; padding: 0.75rem; }
@@ -221,7 +232,7 @@ strong { font-weight: 600; }
 .links a { text-decoration: none; padding-block: 0.2rem; white-space: nowrap; }
 .links a::after { content: " ↗"; font-weight: 400; }
 .links a:hover { text-decoration: underline; }
-@media (max-width: 60rem) { .ledger, .projects .chapter { grid-column: 1 / -1; } }
+@media (max-width: 60rem) { .ledger, .projects .chapter { grid-column: 1 / -1; grid-row: auto; position: static; } .projects .chapter { margin-bottom: 1.5rem; } }
 @media (max-width: 40rem) {
   .ledger summary { grid-template-columns: minmax(0, 1fr) 1.5rem; row-gap: 0.25rem; }
   .ledger summary .kind { grid-row: 2; font-size: var(--s-small); }
@@ -245,11 +256,11 @@ strong { font-weight: 600; }
   .pubs ol > li { grid-template-columns: minmax(0, 1fr); }
 }
 
-/* ============================== ABOUT (yellow) ============================== */
+/* ============================== ABOUT ============================== */
 .about { padding-block: var(--sec); }
-.story { grid-column: 1 / -1; margin: 0; columns: 2; column-gap: clamp(2rem, 4vw, 4rem); font-size: var(--s-lead); line-height: 1.3; letter-spacing: -0.01em; color: var(--yellow-ink); }
-.story mark { background: var(--blue); color: #fff; padding: 0 0.12em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-.story mark.k { background: var(--yellow-ink); color: var(--yellow); }
+.story { grid-column: 1 / -1; margin: 0; columns: 2; column-gap: clamp(2rem, 4vw, 4rem); font-size: var(--s-lead); line-height: 1.3; letter-spacing: -0.01em; }
+.story mark { background: var(--mark); color: inherit; padding: 0 0.12em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.story mark.k { background: var(--blue); color: #fff; }
 .story a { font-weight: 600; }
 @media (max-width: 52rem) { .story { columns: 1; } }
 .cv { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 3rem var(--gap); margin-top: clamp(3.5rem, 7vw, 6rem); }
@@ -260,23 +271,19 @@ strong { font-weight: 600; }
 .cv .what span { color: var(--soft); }
 @media (max-width: 30rem) { .cv li { grid-template-columns: minmax(0, 1fr); } }
 
-/* ============================== CONTACT (blue display rows) ============================== */
-.contact-head { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr)); gap: 1.25rem var(--gap); align-items: end; padding: var(--sec) var(--m) clamp(2rem, 4vw, 3rem); }
-.contact h2 { font-size: var(--s-head); letter-spacing: -0.03em; line-height: 1; }
-.contact-head p { margin: 0; max-width: 34rem; color: var(--soft); font-size: var(--s-lead); line-height: 1.3; }
-.rows { margin: 0; padding: 0; list-style: none; }
-.rows a {
-  display: flex; align-items: baseline; justify-content: space-between; gap: 1rem;
-  padding: clamp(0.9rem, 2vw, 1.5rem) var(--m); text-decoration: none;
-  font-size: clamp(1.5rem, 1rem + 3vw, 3.5rem); font-weight: 600; letter-spacing: -0.03em; line-height: 1.05; overflow-wrap: anywhere;
-  transition: background-color .2s, color .2s;
-}
-.rows li:nth-child(odd) a { background: var(--blue-2); }
-.rows a .arr { flex: none; transition: transform .25s var(--ease); }
-.rows a:hover, .rows a:focus-visible { background: var(--yellow); color: #0c0d12; outline-offset: -3px; }
-.rows a:hover .arr { transform: translate(0.15em, -0.15em); }
-.rows a small { display: block; font-size: var(--s-small); font-weight: 500; letter-spacing: 0; color: var(--soft); margin-bottom: 0.4rem; }
-.rows a:hover small, .rows a:focus-visible small { color: #0c0d12; }
+/* ============================== CONTACT (blue) ============================== */
+.contact { padding-block: var(--sec); row-gap: 3rem; }
+.c-main { grid-column: 1 / 7; }
+.contact h2 { margin-bottom: 1.25rem; font-size: var(--s-head); letter-spacing: -0.03em; line-height: 1; }
+.c-main p { max-width: 30rem; color: var(--soft); font-size: var(--s-lead); line-height: 1.3; margin-bottom: 2rem; }
+.mail { display: inline-block; margin-bottom: 2rem; font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem); font-weight: 600; letter-spacing: -0.02em; text-decoration-thickness: 2px; text-underline-offset: 0.18em; overflow-wrap: anywhere; }
+.c-links { grid-column: 8 / -1; align-self: end; margin: 0; padding: 0; list-style: none; }
+.c-links a { display: flex; align-items: baseline; gap: 1rem; padding: 1rem 1.1rem; margin-inline: -1.1rem; text-decoration: none; font-size: var(--s-lead); font-weight: 500; transition: background-color .2s; }
+.c-links a small { margin-left: auto; font-size: var(--s-small); color: var(--soft); }
+.c-links a .arr { transition: transform .25s var(--ease); }
+.c-links a:hover, .c-links a:focus-visible { background: var(--blue-2); }
+.c-links a:hover .arr { transform: translate(0.15em, -0.15em); }
+@media (max-width: 52rem) { .c-main, .c-links { grid-column: 1 / -1; } }
 
 /* ============================== FOOTER (black, cropped name) ============================== */
 .foot { position: relative; overflow: hidden; padding: 2rem var(--m) 0; }
@@ -296,12 +303,12 @@ strong { font-weight: 600; }
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
   .headline > span, .hero-sub, .bar .fill { animation: none; }
-  .top, .top .btn, .rows a, .rows a .arr, .ledger summary .tog, .btn { transition: none; }
+  .top, .top .btn, .c-links a, .c-links a .arr, .ledger summary .tog, .btn { transition: none; }
 }
 
 @media print {
   .top, .skip, .bench fieldset { display: none; }
-  .f-blue, .f-black, .f-yellow, .bench { background: #fff !important; color: #000 !important; }
+  .f-blue, .f-black, .f-stone, .bench { background: #fff !important; color: #000 !important; }
   .hero { height: auto; min-height: 0; padding: 2rem 0; }
   .hero::after { display: none; }
   .headline, .hero-sub { position: static; color: #000; }
@@ -386,6 +393,7 @@ strong { font-weight: 600; }
     </div>
 
     <div class="bench reveal">
+      <div class="conv">
       <fieldset>
         <legend>Systems converged, against FIRE</legend>
         <input type="radio" name="set" id="set-all"><label for="set-all">All systems (60)</label>
@@ -406,20 +414,17 @@ strong { font-weight: 600; }
           <div class="bar fire"><span>FIRE</span><span class="track"><span class="fill" style="--v:.2692"></span></span><span class="n">7 <small>/ 26</small></span></div>
         </div>
       </div>
-      <p class="fine">The held-out set was sealed before testing. Where both methods converged, this work needed a median 0.18× of FIRE’s band evaluations (95% CI 0.14–0.23). Forces from MACE; evaluation counts exclude Hessian construction; validation with DFT forces is in progress.</p>
+      </div>
+      <div class="evals">
+        <h4>Band evaluations relative to FIRE</h4>
+        <p>Median over the 24 systems where both methods converged</p>
+        <span class="big">0.18× <small>95% CI 0.14–0.23</small></span>
+        <div class="bar fire"><span>FIRE</span><span class="track"><span class="fill" style="--v:1"></span></span><span class="n">1.0</span></div>
+        <div class="bar"><span>This work</span><span class="track"><span class="fill" style="--v:.18"></span><span class="ci" style="left:14%;width:9%" aria-hidden="true"></span></span><span class="n">0.18</span></div>
+      </div>
+      <p class="fine">60-system benchmark: OC20NEB surface reactions, Transition1x gas-phase reactions, diffusion and conformer changes. The held-out set was sealed before testing. Forces from MACE; evaluation counts exclude Hessian construction; validation with DFT forces is in progress.</p>
     </div>
 
-    <figure class="reveal">
-      <div class="frame svg">
-        <picture>
-          <source media="(max-width: 34rem)" srcset="assets/neb_benchmark_narrow.svg">
-          <img src="assets/neb_benchmark.svg" width="720" height="280" loading="lazy"
-             alt="Bar charts comparing the ML-Hessian optimiser with FIRE. Systems converged: 33 versus 28 of 60 overall, 22 versus 14 of 31 held-out, 11 versus 7 of 26 surface reactions. Median band evaluations relative to FIRE: 0.18, 95% CI 0.14 to 0.23."
-             onerror="this.closest('figure').hidden=true">
-        </picture>
-      </div>
-      <figcaption>60-system benchmark: OC20NEB surface reactions, Transition1x gas-phase reactions, diffusion and conformer changes.</figcaption>
-    </figure>
   </article>
 
   <!-- ---------- HMIS seasonality ---------- -->
@@ -451,7 +456,7 @@ strong { font-weight: 600; }
 <!-- =====================================================================
      PROJECTS — a ledger; each row opens to the full write-up
      ===================================================================== -->
-<section class="projects f-black wrap grid" id="projects" data-field="black" aria-labelledby="projects-h">
+<section class="projects f-stone wrap grid" id="projects" data-field="stone" aria-labelledby="projects-h">
   <h2 id="projects-h" class="chapter reveal">More projects</h2>
   <ol class="ledger reveal">
 
@@ -556,7 +561,7 @@ strong { font-weight: 600; }
 <!-- =====================================================================
      ABOUT — the story, then experience and education
      ===================================================================== -->
-<section class="about f-yellow wrap grid" id="about" data-field="yellow" aria-labelledby="about-h">
+<section class="about f-paper wrap grid" id="about" data-field="paper" aria-labelledby="about-h">
   <h2 id="about-h" class="chapter reveal">About</h2>
   <p class="story reveal">I’m Manish, a chemical engineering student at <mark>IIT Bombay</mark> with a minor in AI and data science. Most of my time goes into <mark>transition-state search</mark>: teaching an optimiser to borrow curvature from a machine-learned potential so that it needs fewer expensive force calls. Alongside it, I work on public-health data at the <mark>Koita Centre for Digital Health</mark>, asking why maternal and newborn deaths rise in the hottest months. Beyond research, I have built a pricing engine for path-dependent FX products at <mark>Morgan Stanley</mark>, an earnings-call and filings pipeline at iWealth, and production cloud infrastructure for Dreamplan, a Danish wealth-advice platform. I have also run weekly linear-algebra tutorials for first-year students, and my team placed <mark>first of 64,000+</mark> in the Google Solution Challenge. <a href="#contact"><mark class="k">If any of this overlaps with your work, let’s talk.</mark></a></p>
 
@@ -597,18 +602,19 @@ strong { font-weight: 600; }
      CONTACT — one row per way to reach me
      Booking link (Google Calendar appointment page) appears here and in the intro
      ===================================================================== -->
-<section class="contact f-blue" id="contact" data-field="blue" aria-labelledby="contact-h">
-  <div class="contact-head">
-    <h2 id="contact-h" class="reveal">Get in touch</h2>
-    <p class="reveal" style="--d:80ms">A question about the work, a problem worth solving together, or a paper to discuss: write, or book a slot.</p>
+<section class="contact f-blue wrap grid" id="contact" data-field="blue" aria-labelledby="contact-h">
+  <div class="c-main reveal">
+    <h2 id="contact-h">Get in touch</h2>
+    <p>A question about the work, a problem worth solving together, or a paper to discuss: write, or book a slot.</p>
+    <a class="mail" href="mailto:23b0354@iitb.ac.in">23b0354@iitb.ac.in</a>
+    <div><a class="btn" href="https://calendar.app.google/aF46NTTX1WRm9ttb7">Book a 30-minute call</a></div>
   </div>
-  <ul class="rows">
-    <li><a href="mailto:23b0354@iitb.ac.in"><span><small>Email</small>23b0354@iitb.ac.in</span><span class="arr" aria-hidden="true">↗</span></a></li>
-    <li><a href="https://calendar.app.google/aF46NTTX1WRm9ttb7"><span><small>Calendar</small>Book a 30-minute call</span><span class="arr" aria-hidden="true">↗</span></a></li>
-    <li><a href="assets/Manish_CV.pdf"><span><small>PDF</small>Curriculum vitae</span><span class="arr" aria-hidden="true">↗</span></a></li>
-    <li><a href="https://scholar.google.com/citations?user=Yt-fyAMAAAAJ"><span><small>Papers</small>Google Scholar</span><span class="arr" aria-hidden="true">↗</span></a></li>
-    <li><a href="https://github.com/Manish-785"><span><small>Code</small>GitHub</span><span class="arr" aria-hidden="true">↗</span></a></li>
-    <li><a href="https://linkedin.com/in/manish-singh785"><span><small>Profile</small>LinkedIn</span><span class="arr" aria-hidden="true">↗</span></a></li>
+  <ul class="c-links reveal" style="--d:80ms" aria-label="Elsewhere">
+    <li><a href="assets/Manish_CV.pdf">Curriculum vitae <small>PDF</small><span class="arr" aria-hidden="true">↗</span></a></li>
+    <li><a href="https://scholar.google.com/citations?user=Yt-fyAMAAAAJ">Google Scholar <small>Papers</small><span class="arr" aria-hidden="true">↗</span></a></li>
+    <li><a href="https://github.com/Manish-785">GitHub <small>Code</small><span class="arr" aria-hidden="true">↗</span></a></li>
+    <li><a href="https://linkedin.com/in/manish-singh785">LinkedIn <small>Profile</small><span class="arr" aria-hidden="true">↗</span></a></li>
+    <li><a href="https://arxiv.org/abs/2511.19267">arXiv <small>Preprint</small><span class="arr" aria-hidden="true">↗</span></a></li>
   </ul>
 </section>
 
@@ -639,9 +645,9 @@ strong { font-weight: 600; }
   var top = document.querySelector('.top');
   var palette = {
     paper:  ['var(--paper)',  'var(--paper-ink)',  'var(--blue)',      '#fff'],
-    blue:   ['var(--blue)',   '#fff',              'var(--yellow)',    '#0c0d12'],
-    black:  ['var(--black)',  '#fff',              'var(--yellow)',    '#0c0d12'],
-    yellow: ['var(--yellow)', 'var(--yellow-ink)', 'var(--yellow-ink)','var(--yellow)']
+    stone:  ['var(--stone)',  'var(--paper-ink)',  'var(--blue)',      '#fff'],
+    blue:   ['var(--blue)',   '#fff',              '#fff',             'var(--blue)'],
+    black:  ['var(--black)',  '#fff',              '#fff',             'var(--black)']
   };
   var fields = document.querySelectorAll('[data-field]');
   var setHeader = function () {
