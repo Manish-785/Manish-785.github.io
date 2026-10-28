@@ -20,306 +20,149 @@
 
 <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#f3f3f0">
+<meta name="theme-color" content="#fbfbfa">
 
-<link rel="preconnect" href="https://api.fontshare.com">
-<link rel="preconnect" href="https://cdn.fontshare.com" crossorigin>
-<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&display=swap" rel="stylesheet">
-
-<script>document.documentElement.classList.add('js');</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap" rel="stylesheet">
 
 <style>
 /* =====================================================================
-   THEME — each chapter of the page is one flat field of colour.
-   Change the colours here. Dark mode only darkens the paper field.
+   THEME — change colours and fonts here.
    ===================================================================== */
 :root {
-  --paper: #f3f3f0;  --paper-ink: #0c0d12;  --paper-soft: #55565c;
-  --blue:  #1423b8;  --blue-ink: #ffffff;   --blue-soft: #c6cbf6;  --blue-2: #1220a6;
-  --stone: #e6e5e0;  --stone-soft: #4f5056;
-  --black: #0c0d12;  --black-ink: #ffffff;  --black-soft: #a8a8ad;
-  --mark:  #dde1fb;
+  --bg: #fbfbfa;
+  --ink: #1a1b1f;
+  --soft: #5b5d66;
+  --line: #e3e3df;
+  --panel: #f2f2ef;
+  --accent: #23439c;        /* links and small highlights only */
+  --accent-2: #9db0e6;      /* the comparison bar in the benchmark */
 
-  --font: "General Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
-  /* five type steps */
-  --s-small: 0.875rem;
-  --s-body:  clamp(1.0625rem, 1rem + 0.25vw, 1.1875rem);
-  --s-lead:  clamp(1.25rem, 1.1rem + 0.7vw, 1.625rem);
-  --s-head:  clamp(2rem, 1.3rem + 3.2vw, 4rem);
-  --s-disp:  clamp(4.25rem, 10.5vw, 10rem);
+  --sans: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --serif: "Source Serif 4", Georgia, "Times New Roman", serif;
 
-  --m: clamp(1.25rem, 3.5vw, 3rem);         /* page margin, both sides */
-  --gap: clamp(1.25rem, 2.5vw, 2rem);       /* grid gutter */
-  --sec: clamp(5rem, 11vw, 10rem);          /* space between sections */
-  --head-h: 4rem;
-  --ease: cubic-bezier(.2, .7, .2, 1);
+  --w: 46rem;               /* reading column */
+  --wide: 60rem;            /* figures and header */
+  --m: clamp(1.25rem, 4vw, 2rem);
 }
 @media (prefers-color-scheme: dark) {
-  :root { --paper: #131418; --paper-ink: #ececec; --paper-soft: #a3a3a6; --over: #8f9bff; --stone: #1c1d22; --stone-soft: #a8a8ad; --mark: #26307a; }
+  :root { --bg: #141518; --ink: #e8e8e6; --soft: #a2a3a9; --line: #2a2b30; --panel: #1c1d21; --accent: #9fb4ff; --accent-2: #4a5b8f; }
 }
 
 /* ============================== BASE ============================== */
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: var(--head-h); }
-body { margin: 0; background: var(--paper); color: var(--paper-ink); font: 400 var(--s-body)/1.5 var(--font); -webkit-font-smoothing: antialiased; }
-a { color: inherit; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
-a:hover { text-decoration-thickness: 2px; }
-:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 400 1.0625rem/1.65 var(--sans); -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 35%, transparent); text-underline-offset: 0.18em; }
+a:hover { text-decoration-color: currentColor; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 img { max-width: 100%; height: auto; display: block; }
-h1, h2, h3 { margin: 0; font-weight: 600; text-wrap: balance; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
 p { margin: 0 0 1em; text-wrap: pretty; }
 strong { font-weight: 600; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.skip { position: absolute; left: -999px; top: 0.5rem; z-index: 40; padding: 0.5rem 0.9rem; background: var(--paper-ink); color: var(--paper); font-size: var(--s-small); }
+.skip { position: absolute; left: -999px; top: 0.5rem; z-index: 40; padding: 0.5rem 0.9rem; background: var(--ink); color: var(--bg); font-size: 0.875rem; }
 .skip:focus { left: 0.5rem; }
 
-/* Fields: each sets the ink, soft ink and button colours for everything inside it */
-.f-paper  { background: var(--paper);  color: var(--paper-ink);  --soft: var(--paper-soft);  --btn: var(--blue);   --btn-ink: #fff;        --panel: color-mix(in srgb, var(--paper-ink) 5%, var(--paper)); }
-.f-stone  { background: var(--stone);  color: var(--paper-ink);  --soft: var(--stone-soft);  --btn: var(--blue);   --btn-ink: #fff;        --panel: var(--paper); }
-.f-blue   { background: var(--blue);   color: var(--blue-ink);   --soft: var(--blue-soft);   --btn: #fff;          --btn-ink: var(--blue); --panel: var(--blue-2); }
-.f-black  { background: var(--black);  color: var(--black-ink);  --soft: var(--black-soft);  --btn: #fff;          --btn-ink: var(--black); --panel: #17181d; }
-
-.wrap { padding-inline: var(--m); }
-.grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); }
+.col { max-width: calc(var(--w) + 2 * var(--m)); margin-inline: auto; padding-inline: var(--m); }
 .soft { color: var(--soft); }
 
-.btn {
-  display: inline-flex; align-items: center; gap: 0.5em; padding: 0.8em 1.25em;
-  background: var(--btn); color: var(--btn-ink); font: 600 0.95rem/1 var(--font); text-decoration: none; white-space: nowrap;
-  transition: transform .15s var(--ease), opacity .15s;
-}
-.btn:hover { opacity: .88; }
-.btn:active { transform: scale(.97); }
-
 /* ============================== HEADER ============================== */
-/* Fixed bar that takes the colours of the chapter beneath it */
-.top {
-  position: fixed; inset: 0 0 auto; z-index: 30; height: var(--head-h);
-  display: flex; align-items: center; gap: 1.5rem; padding-inline: var(--m);
-  background: var(--hbg, var(--paper)); color: var(--hink, var(--paper-ink));
-  --btn: var(--hbtn, var(--blue)); --btn-ink: var(--hbtn-ink, #fff);
-  transition: background-color .3s, color .3s;
-}
-.top .btn { transition: background-color .3s, color .3s, transform .15s var(--ease); padding: 0.65em 1.05em; }
-.wordmark { margin-right: auto; font: 700 1.3rem/1 var(--font); letter-spacing: -0.02em; text-decoration: none; }
-.top ul { display: flex; gap: 0.3rem; margin: 0; padding: 0; list-style: none; font: 500 0.95rem/1 var(--font); }
-.top ul a { display: block; padding: 0.6rem 0.6rem; text-decoration: none; }
-.top ul a:hover, .top ul a[aria-current="true"] { text-decoration: underline; text-decoration-thickness: 2px; }
-@media (max-width: 48rem) { .top ul .opt { display: none; } .top { gap: 0.5rem; } .top ul a { padding-inline: 0.45rem; } }
+.top { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.top .in { display: flex; align-items: center; gap: 1rem; max-width: calc(var(--w) + 2 * var(--m)); height: 3.5rem; margin-inline: auto; padding-inline: var(--m); }
+.wordmark { margin-right: auto; font: 600 1.125rem/1 var(--serif); color: var(--ink); text-decoration: none; }
+.top ul { display: flex; gap: 0.15rem; margin: 0; padding: 0; list-style: none; font-size: 0.9375rem; }
+.top ul a { display: block; padding: 0.45rem 0.55rem; color: var(--soft); text-decoration: none; border-radius: 6px; }
+.top ul a:hover, .top ul a[aria-current="true"] { color: var(--ink); background: var(--panel); }
+@media (max-width: 40rem) { .top ul .opt { display: none; } }
 
-/* ============================== HERO ============================== */
-/* Two fields stacked in a grid; the headline sits at the bottom of the upper one and crosses
-   the seam. Each field grows with its content, so nothing overlaps on short or zoomed windows.
-   --hs is the headline size, capped by the window's height as well as its width. */
-.hero { --hs: clamp(3.5rem, min(10.5vw, 21svh), 10rem); display: grid; grid-template-rows: 1fr 1fr; min-height: 100svh; }
-.hero-top { position: relative; min-height: calc(var(--head-h) + 1.15 * var(--hs) + 2rem); }
-.hero-low {
-  display: flex; flex-direction: column; justify-content: center; background: var(--blue);
-  padding: calc(0.57 * var(--hs) + clamp(1.5rem, 4svh, 2.5rem)) var(--m) clamp(2rem, 6svh, 3.5rem);
-}
-.headline {
-  position: absolute; left: 0; right: 0; bottom: calc(-0.57 * var(--hs)); z-index: 1;
-  font: 700 var(--hs)/0.86 var(--font); letter-spacing: -0.035em; text-align: center;
-}
-.headline span { display: block; }
-.headline .over { color: var(--over, var(--blue)); clip-path: inset(0 0 calc(100% - 1.15em) 0); }
-.headline .under { position: absolute; inset: 0; color: #fff; clip-path: inset(1.15em 0 0 0); }
-.hero-sub { margin: 0 auto; max-width: 36rem; text-align: center; color: #fff; font-size: var(--s-lead); line-height: 1.3; }
-.hero-sub .btns { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.6rem; margin-top: 1.4rem; font-size: 1rem; }
-.hero-sub .btn { --btn: #fff; --btn-ink: var(--blue); }
-.hero-sub .btn.alt { --btn: var(--blue-2); --btn-ink: #fff; }
-@media (max-width: 40rem) {
-  .hero { --hs: min(17vw, 21svh); grid-template-rows: auto auto; min-height: 0; }
-  .hero-top { min-height: calc(var(--head-h) + 1.15 * var(--hs) + 5rem); }
-  .hero-sub { font-size: 1.125rem; max-width: 30ch; }
-  .hero-sub .btn-cv { display: none; } /* the CV link stays in the top bar */
-}
+/* ============================== INTRO ============================== */
+.intro { padding-block: clamp(3rem, 8vw, 5rem) clamp(2.5rem, 6vw, 3.5rem); }
+.intro h1 { font: 600 clamp(2.25rem, 1.6rem + 2.5vw, 3rem)/1.1 var(--serif); letter-spacing: -0.01em; }
+.intro .role { margin: 0.6rem 0 1.5rem; font-size: 1.125rem; color: var(--soft); }
+.intro .lead { font-size: 1.1875rem; line-height: 1.6; }
+.contacts { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.75rem 0 0; padding: 0; list-style: none; font-size: 0.9375rem; }
+.contacts a { display: inline-block; padding: 0.45rem 0.85rem; border: 1px solid var(--line); border-radius: 6px; color: var(--ink); text-decoration: none; background: var(--bg); }
+.contacts a:hover { border-color: var(--soft); }
+.contacts a.primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.contacts a.primary:hover { opacity: 0.88; }
 
-/* ============================== INTRO (blue) ============================== */
-.intro { padding-block: clamp(4rem, 8vw, 6.5rem) var(--sec); }
-.intro .lead { grid-column: 1 / -1; margin: 0 0 clamp(3rem, 6vw, 4.5rem); max-width: 52rem; font-size: clamp(1.375rem, 0.9rem + 1.7vw, 2.25rem); line-height: 1.2; letter-spacing: -0.02em; font-weight: 500; }
-.intro .col { grid-column: span 3; margin: 0; font-size: 1rem; line-height: 1.5; color: var(--soft); }
-.intro .col b { color: var(--blue-ink); font-weight: 600; }
-.intro .col a { color: var(--blue-ink); }
-@media (max-width: 60rem) { .intro .col { grid-column: span 6; margin-bottom: 2rem; } }
-@media (max-width: 34rem) { .intro .col { grid-column: 1 / -1; } }
+/* ============================== SECTIONS ============================== */
+section.block { padding-block: clamp(2.5rem, 6vw, 3.5rem); border-top: 1px solid var(--line); }
+.block > h2 { margin-bottom: 1.5rem; font: 600 1.625rem/1.2 var(--serif); }
+.block h3 { font: 600 1.1875rem/1.35 var(--sans); }
+.meta { margin: 0.25rem 0 0.9rem; font-size: 0.9375rem; color: var(--soft); }
+.tags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin: 0 0 1rem; padding: 0; list-style: none; font-size: 0.8125rem; }
+.tags li { padding: 0.15em 0.6em; border-radius: 4px; background: var(--panel); color: var(--soft); }
+.item + .item { margin-top: 2.75rem; }
+.links { display: flex; flex-wrap: wrap; gap: 0.25rem 1.1rem; margin: 0.5rem 0 0; padding: 0; list-style: none; font-size: 0.9375rem; font-weight: 500; }
 
-/* ============================== RESEARCH (paper) ============================== */
-.research { padding-block: var(--sec); }
-.chapter { grid-column: 1 / -1; font-size: var(--s-head); line-height: 1; letter-spacing: -0.03em; margin-bottom: clamp(2.5rem, 5vw, 4rem); }
-.study { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; row-gap: 1.5rem; }
-.study + .study { margin-top: var(--sec); }
-.study h3 { grid-column: 1 / 7; font-size: var(--s-lead); line-height: 1.2; letter-spacing: -0.015em; }
-.study .meta { grid-column: 1 / 7; margin: 0; font-size: var(--s-small); color: var(--soft); }
-.study .meta b { color: var(--blue); font-weight: 600; }
-.study .text { grid-column: 7 / -1; grid-row: 1 / span 3; max-width: 40rem; }
-.study .text p:last-child { margin-bottom: 0; }
-.methods { grid-column: 1 / 7; display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0; padding: 0; list-style: none; font-size: var(--s-small); align-self: start; }
-.methods li { padding: 0.3em 0.6em; background: var(--panel); }
-@media (max-width: 52rem) {
-  .study h3, .study .meta, .study .text, .methods { grid-column: 1 / -1; grid-row: auto; }
-}
-@media (prefers-color-scheme: dark) { .study .meta b { color: #8f9bff; } }
+/* Key numbers, set in a quiet row */
+.figs { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: 1rem; margin: 1.25rem 0 0; }
+.figs div { padding: 0.9rem 1rem; border: 1px solid var(--line); border-radius: 8px; }
+.figs dt { font-size: 1.375rem; font-weight: 600; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.figs dd { margin: 0.25rem 0 0; font-size: 0.875rem; line-height: 1.45; color: var(--soft); }
 
-/* Numbers set as large figures */
-.figs { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1.5rem var(--gap); margin: clamp(1.5rem, 3vw, 2.5rem) 0 0; }
-.figs dt { font-size: var(--s-head); font-weight: 600; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
-.figs dd { margin: 0.6rem 0 0; max-width: 24rem; color: var(--soft); font-size: 1rem; }
+figure { margin: 1.5rem 0 0; }
+figure .frame { padding: 0.75rem; background: #fff; border: 1px solid var(--line); border-radius: 8px; }
+figure img { margin-inline: auto; max-height: 30rem; width: auto; }
+figcaption { margin-top: 0.6rem; font-size: 0.875rem; color: var(--soft); }
 
-/* The benchmark explorer: pick a test set, compare systems converged. Works without JavaScript. */
-.bench { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 2rem clamp(2rem, 4vw, 4rem); margin-top: clamp(1.5rem, 3vw, 2.5rem); padding: clamp(1.25rem, 3vw, 2.5rem); background: var(--blue); color: #fff; --soft: var(--blue-soft); }
-.bench .fine { grid-column: 1 / -1; }
-@media (max-width: 52rem) { .bench { grid-template-columns: minmax(0, 1fr); } }
-.evals h4 { margin: 0 0 0.25rem; font-size: var(--s-lead); font-weight: 600; letter-spacing: -0.01em; }
-.evals > p { margin: 0 0 1.4rem; font-size: var(--s-small); color: var(--soft); }
-.evals .big { display: block; margin: 0 0 1.4rem; font-size: var(--s-head); font-weight: 600; line-height: 1; letter-spacing: -0.03em; }
-.evals .big small { font-size: var(--s-small); font-weight: 500; letter-spacing: 0; color: var(--soft); }
-.evals .bar { grid-template-columns: 5.5rem minmax(0, 1fr) 3rem; }
-.evals .track { position: relative; }
-.ci { position: absolute; top: 50%; height: 0.9rem; transform: translateY(-50%); border: 2px solid var(--blue); border-block: 0; }
-.ci::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid var(--blue); }
-.bench fieldset { border: 0; margin: 0 0 1.75rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.bench legend { padding: 0; margin-bottom: 0.9rem; font-size: var(--s-lead); font-weight: 600; letter-spacing: -0.01em; }
+/* The benchmark: pick a test set, compare systems converged. Works without JavaScript. */
+.bench { margin-top: 1.5rem; padding: 1.25rem; border: 1px solid var(--line); border-radius: 8px; }
+.bench h4 { margin: 0 0 0.75rem; font-size: 0.9375rem; font-weight: 600; }
+.bench fieldset { border: 0; margin: 0 0 1rem; padding: 0; display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.bench legend { padding: 0; margin-bottom: 0.6rem; font-size: 0.9375rem; font-weight: 600; }
 .bench input { position: absolute; opacity: 0; }
-.bench label { padding: 0.6em 1em; background: var(--blue-2); cursor: pointer; font-weight: 500; transition: background-color .15s, color .15s; }
-.bench label:hover { background: #0e1a8c; }
-.bench input:checked + label { background: #fff; color: var(--blue); }
-.bench input:focus-visible + label { outline: 3px solid #fff; outline-offset: 3px; }
+.bench label { padding: 0.3em 0.75em; border: 1px solid var(--line); border-radius: 999px; cursor: pointer; font-size: 0.875rem; color: var(--soft); }
+.bench label:hover { color: var(--ink); }
+.bench input:checked + label { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.bench input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: 2px; }
 .bench .set { display: none; }
 .bench:has(#set-all:checked) .all, .bench:has(#set-held:checked) .held, .bench:has(#set-surf:checked) .surf { display: block; }
-.bar { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr) 6.5rem; align-items: center; gap: 1rem; margin-bottom: 0.9rem; }
+.bar { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) 4rem; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; font-size: 0.875rem; }
 .bar .track, .bar .fill { display: block; }
-.bar .track { height: 2.4rem; background: var(--blue-2); }
-.bar .fill { height: 100%; background: #fff; transform-origin: left; transform: scaleX(var(--v)); animation: grow .8s var(--ease) both; }
-.bar.fire .fill { background: color-mix(in srgb, var(--blue-soft) 55%, var(--blue-2)); }
-.bar .n { font-size: var(--s-lead); font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
-.bar .n small { font-size: var(--s-small); font-weight: 400; color: var(--soft); }
-@keyframes grow { from { transform: scaleX(0); } }
-.bench .fine { margin: 1.4rem 0 0; font-size: var(--s-small); color: var(--soft); max-width: 46rem; }
-@media (max-width: 34rem) {
-  .bar, .evals .bar { grid-template-columns: minmax(0, 1fr) auto; gap: 0.35rem 0.6rem; margin-bottom: 1.1rem; }
-  .bar .track { grid-column: 1 / -1; grid-row: 2; height: 1.75rem; }
-}
+.bar .track { position: relative; height: 0.9rem; background: var(--panel); border-radius: 3px; }
+.bar .fill { height: 100%; width: calc(var(--v) * 100%); background: var(--accent); border-radius: 3px; }
+.bar.fire .fill { background: var(--accent-2); }
+.bar .n { font-variant-numeric: tabular-nums; text-align: right; }
+.ci { position: absolute; top: 50%; height: 0.9rem; transform: translateY(-50%); border: 1.5px solid var(--ink); border-block: 0; }
+.ci::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 1.5px solid var(--ink); }
+.bench .evals { margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--line); }
+.bench .evals p { margin: -0.4rem 0 0.75rem; font-size: 0.875rem; color: var(--soft); }
+.bench .fine { margin: 1rem 0 0; font-size: 0.8125rem; line-height: 1.5; color: var(--soft); }
 
-.study figure { grid-column: 1 / -1; margin: clamp(1.5rem, 3vw, 2.5rem) 0 0; }
-.study figure .frame { background: #fff; padding: clamp(0.5rem, 2vw, 1.5rem); }
-.study figure img { margin: 0 auto; max-height: 34rem; width: auto; }
-.study figcaption { margin-top: 0.8rem; font-size: var(--s-small); color: var(--soft); max-width: 46rem; }
+/* Publications */
+.pubs { margin: 0; padding: 0; list-style: none; }
+.pubs > li + li { margin-top: 1.25rem; }
+.pubs .t { display: block; font-weight: 600; line-height: 1.45; }
+.pubs .a, .pubs .v { font-size: 0.9375rem; color: var(--soft); }
+.pubs .a strong { color: var(--ink); }
+.block .group { margin: 2rem 0 0.9rem; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--soft); }
+.block > h2 + .group { margin-top: 0; }
+.note { margin-top: 1.25rem; font-size: 0.875rem; color: var(--soft); }
 
-/* ============================== PROJECTS (stone ledger) ============================== */
-.projects { padding-block: var(--sec); }
-.ledger { grid-column: 5 / -1; grid-row: 1; margin: 0; padding: 0; list-style: none; }
-.projects .chapter { grid-column: 1 / 5; grid-row: 1; margin-bottom: 0; padding-top: 1rem; align-self: start; position: sticky; top: calc(var(--head-h) + 2rem); }
-.ledger details { padding-block: 0.4rem; }
-.ledger summary {
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr) 7rem 1.5rem; gap: 1rem; align-items: baseline;
-  padding: 1.1rem 0; cursor: pointer; list-style: none; transition: color .2s;
-}
-.ledger summary::-webkit-details-marker { display: none; }
-.ledger summary .name { font-size: var(--s-lead); font-weight: 600; letter-spacing: -0.01em; line-height: 1.2; }
-.ledger summary .kind { color: var(--soft); font-size: 1rem; }
-.ledger summary .yr { color: var(--soft); font-size: 1rem; text-align: right; font-variant-numeric: tabular-nums; }
-.ledger summary .tog { font-size: var(--s-lead); line-height: 1; text-align: right; transition: transform .25s var(--ease); }
-.ledger details[open] .tog { transform: rotate(45deg); }
-.ledger:hover summary, .ledger:focus-within summary { color: var(--soft); }
-.ledger:hover summary:hover, .ledger summary:focus-visible, .ledger details[open] summary { color: var(--paper-ink); }
-.ledger details:not([open]) .more { display: none; }
-.ledger .more { padding: 0.5rem 0 2.5rem; max-width: 46rem; }
-.ledger .more .meta { font-size: var(--s-small); color: var(--soft); }
-.ledger .more .meta b { color: var(--blue); font-weight: 600; }
-@media (prefers-color-scheme: dark) { .ledger .more .meta b { color: #8f9bff; } }
-.ledger .figs dt { font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.5rem); }
-.ledger figure { margin: 1.8rem 0 0; }
-.ledger figure .frame { background: #fff; padding: 0.75rem; }
-.ledger figcaption { margin-top: 0.7rem; font-size: var(--s-small); color: var(--soft); }
-.links { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin: 1.5rem 0 0; padding: 0; list-style: none; font-weight: 600; }
-.links a { text-decoration: none; padding-block: 0.2rem; white-space: nowrap; }
-.links a::after { content: " ↗"; font-weight: 400; }
-.links a:hover { text-decoration: underline; }
-@media (max-width: 60rem) { .ledger, .projects .chapter { grid-column: 1 / -1; grid-row: auto; position: static; } .projects .chapter { margin-bottom: 1.5rem; } }
-@media (max-width: 40rem) {
-  .ledger summary { grid-template-columns: minmax(0, 1fr) 1.5rem; row-gap: 0.25rem; }
-  .ledger summary .kind { grid-row: 2; font-size: var(--s-small); }
-  .ledger summary .yr { display: none; }
-  .ledger summary .tog { grid-row: 1; grid-column: 2; }
-}
+/* Experience and education: date column + entry */
+.cv { margin: 0; padding: 0; list-style: none; }
+.cv li { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 0 1.25rem; padding-block: 0.7rem; }
+.cv li + li { border-top: 1px solid var(--line); }
+.cv .when { font-size: 0.9375rem; color: var(--soft); font-variant-numeric: tabular-nums; }
+.cv .what span { display: block; margin-top: 0.15rem; font-size: 0.9375rem; color: var(--soft); }
+@media (max-width: 34rem) { .cv li { grid-template-columns: minmax(0, 1fr); } }
 
-/* ============================== PUBLICATIONS (paper line-up) ============================== */
-.pubs { padding-block: var(--sec); }
-.pubs .group { grid-column: 1 / -1; margin: clamp(2rem, 4vw, 3rem) 0 1rem; font-size: var(--s-lead); font-weight: 600; color: var(--blue); }
-@media (prefers-color-scheme: dark) { .pubs .group { color: #8f9bff; } }
-.pubs .chapter + .group { margin-top: 0; }
-.pubs ol { grid-column: 1 / -1; margin: 0; padding: 0; list-style: none; }
-.pubs ol > li { display: grid; grid-template-columns: minmax(0, 6fr) minmax(0, 3fr) minmax(0, 3fr); gap: 0.4rem var(--gap); padding-block: 1.1rem; align-items: baseline; }
-.pubs .t { font-size: var(--s-lead); font-weight: 500; line-height: 1.25; letter-spacing: -0.01em; }
-.pubs .a, .pubs .v { color: var(--soft); font-size: 1rem; }
-.pubs .a strong { color: var(--paper-ink); }
-.pubs .links { grid-column: 1; margin: 0.2rem 0 0; font-size: 1rem; }
-.pubs .note { grid-column: 1 / -1; margin-top: 1.5rem; font-size: var(--s-small); color: var(--soft); }
-@media (max-width: 60rem) {
-  .pubs ol > li { grid-template-columns: minmax(0, 1fr); }
-}
+/* Contact */
+.contact p { max-width: 36rem; }
 
-/* ============================== ABOUT ============================== */
-.about { padding-block: var(--sec); }
-.story { grid-column: 1 / -1; margin: 0; columns: 2; column-gap: clamp(2rem, 4vw, 4rem); font-size: var(--s-lead); line-height: 1.3; letter-spacing: -0.01em; }
-.story mark { background: var(--mark); color: inherit; padding: 0 0.12em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
-.story mark.k { background: var(--blue); color: #fff; }
-.story a { font-weight: 600; }
-@media (max-width: 52rem) { .story { columns: 1; } }
-.cv { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 26rem), 1fr)); gap: 3rem var(--gap); margin-top: clamp(3.5rem, 7vw, 6rem); }
-.cv h3 { font-size: var(--s-lead); letter-spacing: -0.01em; margin-bottom: 1rem; }
-.cv ol { margin: 0; padding: 0; list-style: none; }
-.cv li { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: 0 1rem; padding-block: 0.65rem; font-size: 1rem; line-height: 1.45; }
-.cv .when { color: var(--soft); font-variant-numeric: tabular-nums; }
-.cv .what span { color: var(--soft); }
-@media (max-width: 30rem) { .cv li { grid-template-columns: minmax(0, 1fr); } }
+/* ============================== FOOTER ============================== */
+.foot { padding-block: 2rem 2.5rem; border-top: 1px solid var(--line); font-size: 0.875rem; color: var(--soft); }
+.foot .col { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; }
 
-/* ============================== CONTACT (blue) ============================== */
-.contact { padding-block: var(--sec); row-gap: 3rem; }
-.c-main { grid-column: 1 / 7; }
-.contact h2 { margin-bottom: 1.25rem; font-size: var(--s-head); letter-spacing: -0.03em; line-height: 1; }
-.c-main p { max-width: 30rem; color: var(--soft); font-size: var(--s-lead); line-height: 1.3; margin-bottom: 2rem; }
-.mail { display: inline-block; margin-bottom: 2rem; font-size: clamp(1.5rem, 1rem + 2vw, 2.5rem); font-weight: 600; letter-spacing: -0.02em; text-decoration-thickness: 2px; text-underline-offset: 0.18em; overflow-wrap: anywhere; }
-.c-links { grid-column: 8 / -1; align-self: end; margin: 0; padding: 0; list-style: none; }
-.c-links a { display: flex; align-items: baseline; gap: 1rem; padding: 1rem 1.1rem; margin-inline: -1.1rem; text-decoration: none; font-size: var(--s-lead); font-weight: 500; transition: background-color .2s; }
-.c-links a small { margin-left: auto; font-size: var(--s-small); color: var(--soft); }
-.c-links a .arr { transition: transform .25s var(--ease); }
-.c-links a:hover, .c-links a:focus-visible { background: var(--blue-2); }
-.c-links a:hover .arr { transform: translate(0.15em, -0.15em); }
-@media (max-width: 52rem) { .c-main, .c-links { grid-column: 1 / -1; } }
-
-/* ============================== FOOTER (black, cropped name) ============================== */
-.foot { padding: 1.75rem var(--m); }
-.foot .line { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.5rem 2rem; font-size: var(--s-small); color: var(--soft); }
-.foot .line a { color: var(--black-ink); }
-
-/* ============================== MOTION ============================== */
-/* Content is visible without JavaScript; the entrance only runs once the script has tagged <html>. */
-.js .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s var(--ease), transform .8s var(--ease); transition-delay: var(--d, 0ms); }
-.js .reveal.in { opacity: 1; transform: none; }
-.headline > span, .hero-sub { animation: rise 1s var(--ease) both; }
-.headline .under { animation-delay: 0ms; }
-.hero-sub { animation-delay: .25s; }
-@keyframes rise { from { opacity: 0; transform: translateY(0.25em); } }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  .js .reveal { opacity: 1; transform: none; transition: none; }
-  .headline > span, .hero-sub, .bar .fill { animation: none; }
-  .top, .top .btn, .c-links a, .c-links a .arr, .ledger summary .tog, .btn { transition: none; }
-}
-
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 @media print {
   .top, .skip, .bench fieldset { display: none; }
-  .f-blue, .f-black, .f-stone, .bench { background: #fff !important; color: #000 !important; }
-  .hero { display: block; min-height: 0; padding: 2rem 0; }
-  .hero-top { min-height: 0; }
-  .hero-low { background: none; padding: 1rem 0; }
-  .headline, .hero-sub { position: static; color: #000; }
-  .headline .under { display: none; }
-  .headline .over { clip-path: none; color: #000; }
-  .ledger details > * { display: block; }
-  .js .reveal { opacity: 1; transform: none; }
+  body { background: #fff; color: #000; }
+  .bench .set { display: block; }
 }
 </style>
 </head>
@@ -327,131 +170,102 @@ strong { font-weight: 600; }
 <body>
 <a class="skip" href="#main">Skip to content</a>
 
-<!-- =====================================================================
-     HEADER — fixed; takes the colours of the chapter beneath it
-     ===================================================================== -->
 <header class="top">
-  <a class="wordmark" href="#top">Manish</a>
-  <nav aria-label="Main">
-    <ul>
-      <li><a href="#research">Research</a></li>
-      <li class="opt"><a href="#projects">Projects</a></li>
-      <li class="opt"><a href="#publications">Publications</a></li>
-      <li class="opt"><a href="#about">About</a></li>
-      <li><a href="assets/Manish_CV.pdf">CV</a></li>
-    </ul>
-  </nav>
-  <a class="btn" href="#contact">Reach out</a>
+  <div class="in">
+    <a class="wordmark" href="#top">Manish</a>
+    <nav aria-label="Main">
+      <ul>
+        <li><a href="#research">Research</a></li>
+        <li><a href="#publications">Publications</a></li>
+        <li class="opt"><a href="#projects">Projects</a></li>
+        <li class="opt"><a href="#experience">Experience</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
 </header>
-
-<!-- =====================================================================
-     HERO — the headline sits across the seam between two fields,
-     the way a reaction path crosses its barrier
-     ===================================================================== -->
-<section class="hero f-paper" id="top" data-field="paper" aria-labelledby="hero-h">
-  <div class="hero-top">
-    <h1 class="headline" id="hero-h">
-      <span class="sr-only">Manish: </span>
-      <span class="over">Over the<br>barrier</span>
-      <span class="under" aria-hidden="true">Over the<br>barrier</span>
-    </h1>
-  </div>
-  <div class="hero-low">
-    <div class="hero-sub">
-      <p style="margin:0">I’m Manish. I build optimisation and machine-learning methods that find reaction transition states with far fewer expensive calculations.</p>
-      <div class="btns">
-        <a class="btn" href="#contact">Reach out</a>
-        <a class="btn alt" href="#research">See the research</a>
-        <a class="btn alt btn-cv" href="assets/Manish_CV.pdf">CV (PDF)</a>
-      </div>
-    </div>
-  </div>
-</section>
 
 <main id="main">
 
 <!-- =====================================================================
-     INTRO — the short version, in four answers
+     INTRO — who, what, and how to reach me
      ===================================================================== -->
-<section class="intro f-blue wrap grid" data-field="blue" aria-labelledby="intro-h">
-  <h2 id="intro-h" class="sr-only">In short</h2>
-  <p class="lead reveal">I work where numerical optimisation meets machine-learned interatomic potentials, to make atomistic simulation cheaper and more reliable.</p>
-  <p class="col reveal"><b>Who.</b> Final-year B.Tech. in Chemical Engineering at IIT Bombay, with a minor in Artificial Intelligence and Data Science. CPI 9.74 / 10 and the Institute Academic Prize, 2025.</p>
-  <p class="col reveal" style="--d:80ms"><b>Now.</b> Machine-learned Hessian preconditioning for nudged elastic band searches, with Prof. Sudarshan Vijay; and how heat shapes maternal and newborn deaths across India, with Prof. Saket Choudhary.</p>
-  <p class="col reveal" style="--d:160ms"><b>Methods.</b> Numerical optimisation, transition-state search, machine-learned interatomic potentials, graph neural networks, panel models with fixed effects, and fine-tuned language models.</p>
-  <p class="col reveal" style="--d:240ms"><b>Reach me.</b> <a href="mailto:23b0354@iitb.ac.in">23b0354@iitb.ac.in</a>, or <a href="https://calendar.app.google/aF46NTTX1WRm9ttb7">book a 30-minute call</a>. Papers on <a href="https://scholar.google.com/citations?user=Yt-fyAMAAAAJ">Google Scholar</a>, code on <a href="https://github.com/Manish-785">GitHub</a>.</p>
+<section class="intro col" id="top">
+  <h1>Manish</h1>
+  <p class="role">Chemical Engineering, IIT Bombay · Minor in AI and Data Science</p>
+  <p class="lead">I build optimisation and machine-learning methods for atomistic simulation. My main project uses the curvature of a machine-learned interatomic potential to find reaction transition states with far fewer expensive force calls.</p>
+  <p>I also work on public-health data, showing that maternal and newborn deaths in India peak in the hottest months, and I have built pricing and data tools in industry. Methods I use: numerical optimisation, transition-state search, machine-learned potentials, graph neural networks, panel models with fixed effects, and fine-tuned language models.</p>
+  <ul class="contacts">
+    <li><a class="primary" href="mailto:23b0354@iitb.ac.in">Email</a></li>
+    <li><a href="assets/Manish_CV.pdf">CV (PDF)</a></li>
+    <li><a href="https://scholar.google.com/citations?user=Yt-fyAMAAAAJ">Google Scholar</a></li>
+    <li><a href="https://github.com/Manish-785">GitHub</a></li>
+    <li><a href="https://linkedin.com/in/manish-singh785">LinkedIn</a></li>
+  </ul>
 </section>
 
 <!-- =====================================================================
-     RESEARCH — one .study per project. Figures: put the image in assets/;
+     RESEARCH — one .item per project. Figures: put the image in assets/;
      if the file is missing, the figure hides itself.
      ===================================================================== -->
-<section class="research f-paper wrap grid" id="research" data-field="paper" aria-labelledby="research-h">
-  <h2 id="research-h" class="chapter reveal">Research</h2>
+<section class="block col" id="research" aria-labelledby="research-h">
+  <h2 id="research-h">Research</h2>
 
   <!-- ---------- NEB optimiser ---------- -->
-  <article class="study" aria-labelledby="p-neb">
-    <h3 id="p-neb" class="reveal">Finding transition states with machine-learned curvature</h3>
-    <p class="meta reveal"><b>Ongoing</b> · B.Tech. project with Prof. Sudarshan Vijay, IIT Bombay · since May 2025</p>
-    <ul class="methods reveal" aria-label="Methods">
+  <article class="item" aria-labelledby="p-neb">
+    <h3 id="p-neb">Finding transition states with machine-learned curvature</h3>
+    <p class="meta">Ongoing · B.Tech. project with Prof. Sudarshan Vijay, IIT Bombay · since May 2025</p>
+    <ul class="tags" aria-label="Methods">
       <li>Nudged elastic band</li><li>MACE-MP-0</li><li>Hessian preconditioning</li><li>Safeguarded L-BFGS</li>
     </ul>
-    <div class="text reveal" style="--d:80ms">
-      <p>To learn how a reaction happens, you need its transition state: the highest point on the lowest-energy path between reactant and product. The nudged elastic band (NEB) method finds that path, but every step costs force calls, usually from DFT.</p>
-      <p>I precondition the optimiser with the Hessian of a machine-learned potential (MACE-MP-0), projected onto the directions perpendicular to the path and paired with an analytical spring-force Jacobian along it, inside a safeguarded L-BFGS. The hard part was working out why curvature-based preconditioning breaks down near a saddle point, where the Hessian is indefinite and the two subspaces leak into each other.</p>
-    </div>
+    <p>To understand how a reaction happens, you need its transition state: the highest point on the lowest-energy path between reactant and product. The nudged elastic band (NEB) method finds that path, but every step costs force calls, usually from DFT.</p>
+    <p>I precondition the optimiser with the Hessian of a machine-learned potential (MACE-MP-0), projected onto the directions perpendicular to the path and paired with an analytical spring-force Jacobian along it, inside a safeguarded L-BFGS. The hard part was working out why curvature-based preconditioning breaks down near a saddle point, where the Hessian is indefinite and the two subspaces leak into each other.</p>
 
-    <div class="bench reveal">
-      <div class="conv">
+    <div class="bench">
       <fieldset>
-        <legend>Systems converged, against FIRE</legend>
+        <legend>Systems converged, compared with FIRE</legend>
         <input type="radio" name="set" id="set-all"><label for="set-all">All systems (60)</label>
         <input type="radio" name="set" id="set-held" checked><label for="set-held">Sealed held-out set (31)</label>
         <input type="radio" name="set" id="set-surf"><label for="set-surf">Surface reactions, OC20NEB (26)</label>
       </fieldset>
       <div class="sets" aria-live="polite">
         <div class="set all">
-          <div class="bar"><span>This work</span><span class="track"><span class="fill" style="--v:.55"></span></span><span class="n">33 <small>/ 60</small></span></div>
-          <div class="bar fire"><span>FIRE</span><span class="track"><span class="fill" style="--v:.4667"></span></span><span class="n">28 <small>/ 60</small></span></div>
+          <div class="bar"><span>This work</span><span class="track"><span class="fill" style="--v:.55"></span></span><span class="n">33 / 60</span></div>
+          <div class="bar fire"><span>FIRE</span><span class="track"><span class="fill" style="--v:.4667"></span></span><span class="n">28 / 60</span></div>
         </div>
         <div class="set held">
-          <div class="bar"><span>This work</span><span class="track"><span class="fill" style="--v:.7097"></span></span><span class="n">22 <small>/ 31</small></span></div>
-          <div class="bar fire"><span>FIRE</span><span class="track"><span class="fill" style="--v:.4516"></span></span><span class="n">14 <small>/ 31</small></span></div>
+          <div class="bar"><span>This work</span><span class="track"><span class="fill" style="--v:.7097"></span></span><span class="n">22 / 31</span></div>
+          <div class="bar fire"><span>FIRE</span><span class="track"><span class="fill" style="--v:.4516"></span></span><span class="n">14 / 31</span></div>
         </div>
         <div class="set surf">
-          <div class="bar"><span>This work</span><span class="track"><span class="fill" style="--v:.4231"></span></span><span class="n">11 <small>/ 26</small></span></div>
-          <div class="bar fire"><span>FIRE</span><span class="track"><span class="fill" style="--v:.2692"></span></span><span class="n">7 <small>/ 26</small></span></div>
+          <div class="bar"><span>This work</span><span class="track"><span class="fill" style="--v:.4231"></span></span><span class="n">11 / 26</span></div>
+          <div class="bar fire"><span>FIRE</span><span class="track"><span class="fill" style="--v:.2692"></span></span><span class="n">7 / 26</span></div>
         </div>
       </div>
-      </div>
       <div class="evals">
-        <h4>Band evaluations relative to FIRE</h4>
+        <h4>Band evaluations relative to FIRE: 0.18× (95% CI 0.14–0.23)</h4>
         <p>Median over the 24 systems where both methods converged</p>
-        <span class="big">0.18× <small>95% CI 0.14–0.23</small></span>
         <div class="bar fire"><span>FIRE</span><span class="track"><span class="fill" style="--v:1"></span></span><span class="n">1.0</span></div>
         <div class="bar"><span>This work</span><span class="track"><span class="fill" style="--v:.18"></span><span class="ci" style="left:14%;width:9%" aria-hidden="true"></span></span><span class="n">0.18</span></div>
       </div>
       <p class="fine">60-system benchmark: OC20NEB surface reactions, Transition1x gas-phase reactions, diffusion and conformer changes. The held-out set was sealed before testing. Forces from MACE; evaluation counts exclude Hessian construction; validation with DFT forces is in progress.</p>
     </div>
-
   </article>
 
   <!-- ---------- HMIS seasonality ---------- -->
-  <article class="study" aria-labelledby="p-hmis">
-    <h3 id="p-hmis" class="reveal">The hot-season peak in maternal and newborn deaths in India</h3>
-    <p class="meta reveal"><b>Manuscript in preparation</b> · R&amp;D project with Prof. Saket Choudhary, Koita Centre for Digital Health, IIT Bombay</p>
-    <ul class="methods reveal" aria-label="Methods">
+  <article class="item" aria-labelledby="p-hmis">
+    <h3 id="p-hmis">The hot-season peak in maternal and newborn deaths in India</h3>
+    <p class="meta">Manuscript in preparation · R&amp;D project with Prof. Saket Choudhary, Koita Centre for Digital Health, IIT Bombay</p>
+    <ul class="tags" aria-label="Methods">
       <li>Poisson fixed-effects models</li><li>ERA5 climate data</li><li>NFHS-5</li><li>772 districts, 2009–2024</li>
     </ul>
-    <div class="text reveal" style="--d:80ms">
-      <p>Births in India are seasonal, but the deaths of mothers and newborns follow a different calendar. Using district-month health records for 772 districts from 2009 to 2024, linked to ERA5 climate and NFHS-5 survey data, I show that deaths per birth peak every year in May–July, the hottest months.</p>
-      <p>Poisson models with district-by-year fixed effects compare each district only with itself. The peak survives five different birth registers as denominators, and the neonatal peak appears independently in the national household survey.</p>
-    </div>
-    <dl class="figs reveal">
+    <p>Births in India are seasonal, but the deaths of mothers and newborns follow a different calendar. Using district-month health records for 772 districts from 2009 to 2024, linked to ERA5 climate and NFHS-5 survey data, I show that deaths per birth peak every year in May–July, the hottest months.</p>
+    <p>Poisson models with district-by-year fixed effects compare each district only with itself. The peak survives five different birth registers as denominators, and the neonatal peak appears independently in the national household survey.</p>
+    <dl class="figs">
       <div><dt>+42% / +22%</dt><dd>maternal / neonatal deaths per birth in May–July vs. February–March</dd></div>
       <div><dt>69%</dt><dd>of the maternal seasonal pattern reproduced by temperature alone</dd></div>
     </dl>
-    <figure class="reveal">
+    <figure>
       <div class="frame">
         <img src="assets/hmis_seasonality.png" width="1400" height="616" loading="lazy"
              alt="Line charts by calendar month for maternal and neonatal deaths: births, deaths and deaths per birth relative to the annual mean. Deaths per birth rise sharply from March and peak in May to July, while births peak later, in August to October."
@@ -463,77 +277,17 @@ strong { font-weight: 600; }
 </section>
 
 <!-- =====================================================================
-     PROJECTS — a ledger; each row opens to the full write-up
-     ===================================================================== -->
-<section class="projects f-stone wrap grid" id="projects" data-field="stone" aria-labelledby="projects-h">
-  <h2 id="projects-h" class="chapter reveal">More projects</h2>
-  <ol class="ledger reveal">
-
-    <!-- ---------- STGNN ---------- -->
-    <li><details>
-      <summary><span class="name">Spatiotemporal graph networks for multi-store forecasting</span><span class="kind">Graph ML · preprint</span><span class="yr">2025</span><span class="tog" aria-hidden="true">+</span></summary>
-      <div class="more">
-        <p class="meta"><b>Preprint</b> · Course project, EE782, with Prof. Amit Sethi · with Arpita Dayama · Aug–Nov 2025</p>
-        <p>Retail stores share trends, so forecasting them one at a time throws information away. We forecast weekly sales for 45 Walmart stores jointly with a spatiotemporal GNN that learns its own store-to-store graph, combining dilated temporal convolutions with graph convolution, and compared it with ARIMA, XGBoost and LSTM under identical features and splits. The learned graph recovered functional groups of stores without any location data.</p>
-        <dl class="figs"><div><dt>2.08%</dt><dd>MAPE on Store 37, nearly 50% lower than ARIMA</dd></div></dl>
-        <figure>
-          <div class="frame">
-            <img src="assets/gnn_learned_graph.png" width="1049" height="798" loading="lazy"
-                 alt="Heatmap of the learned store-to-store adjacency matrix for 45 stores, ordered by hierarchical clustering with a dendrogram, showing a few strongly connected blocks of stores."
-                 onerror="this.closest('figure').hidden=true">
-          </div>
-          <figcaption>Learned spatial dependencies between stores, ordered by hierarchical clustering.</figcaption>
-        </figure>
-        <ul class="links">
-          <li><a href="https://arxiv.org/abs/2511.19267">arXiv</a></li>
-          <li><a href="https://github.com/Manish-785/sales-demand-forecasting">Code</a></li>
-        </ul>
-      </div>
-    </details></li>
-
-    <!-- ---------- Quant Auditor ---------- -->
-    <li><details>
-      <summary><span class="name">Quant Auditor: a small language model that audits trading backtests</span><span class="kind">LLM agents · course project</span><span class="yr">Ongoing</span><span class="tog" aria-hidden="true">+</span></summary>
-      <div class="more">
-        <p class="meta"><b>Ongoing</b> · Course project, IE624 Generative and Agentic AI · team of two, with Arpita</p>
-        <p>A trading strategy can look profitable only because of hidden mistakes such as look-ahead, ignored trading costs or in-sample tuning. I am building an auditor agent that investigates strategy code by running experiments on it, with one rule: no number reaches the user unless it is cited to its source or produced by an executed test. It is trained on flawed backtests paired with clean controls that differ in exactly one detail, using a fine-tuned Qwen3-4B on free GPUs.</p>
-        <dl class="figs">
-          <div><dt>~70%</dt><dd>of 30 popular public backtest notebooks that simulate profits had at least one major flaw (audited by hand)</dd></div>
-          <div><dt>2,921</dt><dd>matched pairs of flawed and clean backtests on 20 years of real prices</dd></div>
-        </dl>
-        <!-- Figure / code link: add when ready, e.g.
-        <figure><div class="frame"><img src="assets/quant_auditor.png" alt="..." loading="lazy" onerror="this.closest('figure').hidden=true"></div><figcaption>...</figcaption></figure>
-        <ul class="links"><li><a href="https://github.com/...">Code</a></li></ul> -->
-      </div>
-    </details></li>
-
-    <!-- ---------- GenAI drug discovery ---------- -->
-    <li><details>
-      <summary><span class="name">Generative AI for drug discovery</span><span class="kind">Generative chemistry · 1st of 64,000+</span><span class="yr">2025</span><span class="tog" aria-hidden="true">+</span></summary>
-      <div class="more">
-        <p class="meta"><b>1st of 64,000+ participants</b> · Google Solution Challenge 2025 · team project</p>
-        <p>A protein-conditioned recurrent network generates candidate molecules for a given target: a bidirectional LSTM with attention encodes the protein, and the generator is trained on 550K+ BindingDB samples. Candidates are ranked on drug-likeness, toxicity, solubility and predicted binding, using DiffDock and MolFormer.</p>
-        <dl class="figs"><div><dt>100% / 99.7%</dt><dd>validity / uniqueness of generated molecules</dd></div></dl>
-        <!-- Figure / code / demo link: add here if the MolGenX repository or demo becomes public -->
-      </div>
-    </details></li>
-
-  </ol>
-</section>
-
-<!-- =====================================================================
      PUBLICATIONS — to add a paper, copy one <li>. Mark your name with
      <strong>. * = equal contribution.
      ===================================================================== -->
-<section class="pubs f-paper wrap grid" id="publications" data-field="paper" aria-labelledby="pubs-h">
-  <h2 id="pubs-h" class="chapter reveal">Publications</h2>
+<section class="block col" id="publications" aria-labelledby="pubs-h">
+  <h2 id="pubs-h">Publications</h2>
 
-  <h3 class="group reveal">Preprints</h3>
-  <ol class="reveal">
+  <h3 class="group">Preprints</h3>
+  <ol class="pubs">
     <li>
       <span class="t">Leveraging spatial-temporal graph neural networks for multi-store sales forecasting</span>
-      <span class="a"><strong>Manish</strong>*, Arpita Dayama*</span>
-      <span class="v">arXiv:2511.19267, 2025</span>
+      <span class="a"><strong>Manish</strong>*, Arpita Dayama*</span> · <span class="v">arXiv:2511.19267, 2025</span>
       <ul class="links">
         <li><a href="https://arxiv.org/abs/2511.19267">arXiv</a></li>
         <li><a href="https://arxiv.org/pdf/2511.19267">PDF</a></li>
@@ -542,8 +296,7 @@ strong { font-weight: 600; }
     </li>
     <li>
       <span class="t">Questions that determine the ‘babu’: a comprehensive analysis of India’s UPSC Civil Services Mains Examination General Studies questions</span>
-      <span class="a"><strong>Manish</strong>*, Arnav Pandey*, Syaamantak Das*</span>
-      <span class="v">SSRN 5077877, 2024</span>
+      <span class="a"><strong>Manish</strong>*, Arnav Pandey*, Syaamantak Das*</span> · <span class="v">SSRN 5077877, 2024</span>
       <ul class="links">
         <li><a href="https://papers.ssrn.com/sol3/papers.cfm?abstract_id=5077877">SSRN</a></li>
         <li><a href="https://github.com/Manish-785/SURP-2024">Code</a></li>
@@ -551,140 +304,142 @@ strong { font-weight: 600; }
     </li>
   </ol>
 
-  <h3 class="group reveal">In preparation</h3>
-  <ol class="reveal">
+  <h3 class="group">In preparation</h3>
+  <ol class="pubs">
     <li>
       <span class="t">Machine-learned Hessian preconditioning for nudged elastic band transition-state searches</span>
-      <span class="a"><strong>Manish</strong>, Sudarshan Vijay</span>
-      <span class="v">arXiv preprint planned for late 2026</span>
+      <span class="a"><strong>Manish</strong>, Sudarshan Vijay</span> · <span class="v">arXiv preprint planned for late 2026</span>
     </li>
     <li>
       <span class="t">The hot-season peak in maternal and neonatal deaths in India: a national district-level analysis, 2009–24</span>
-      <span class="a"><strong>Manish</strong>, Saket Choudhary</span>
-      <span class="v">Manuscript in preparation</span>
+      <span class="a"><strong>Manish</strong>, Saket Choudhary</span> · <span class="v">Manuscript in preparation</span>
     </li>
   </ol>
   <p class="note">* equal contribution. Titles of manuscripts in preparation are working titles.</p>
 </section>
 
 <!-- =====================================================================
-     ABOUT — the story, then experience and education
+     PROJECTS — one .item per project
      ===================================================================== -->
-<section class="about f-paper wrap grid" id="about" data-field="paper" aria-labelledby="about-h">
-  <h2 id="about-h" class="chapter reveal">About</h2>
-  <p class="story reveal">I’m Manish, a chemical engineering student at <mark>IIT Bombay</mark> with a minor in AI and data science. Most of my time goes into <mark>transition-state search</mark>: teaching an optimiser to borrow curvature from a machine-learned potential so that it needs fewer expensive force calls. Alongside it, I work on public-health data at the <mark>Koita Centre for Digital Health</mark>, asking why maternal and newborn deaths rise in the hottest months. Beyond research, I have built a pricing engine for path-dependent FX products at <mark>Morgan Stanley</mark>, an earnings-call and filings pipeline at iWealth, and production cloud infrastructure for Dreamplan, a Danish wealth-advice platform. I have also run weekly linear-algebra tutorials for first-year students, and my team placed <mark>first of 64,000+</mark> in the Google Solution Challenge. <a href="#contact"><mark class="k">If any of this overlaps with your work, let’s talk.</mark></a></p>
+<section class="block col" id="projects" aria-labelledby="projects-h">
+  <h2 id="projects-h">Projects</h2>
 
-  <div class="cv">
-    <div class="reveal">
-      <h3>Experience</h3>
-      <ol>
-        <li><span class="when">May–Jul 2026</span>
-            <span class="what"><strong>Summer Associate, Asia FX Structuring</strong>, Morgan Stanley<br>
-            <span>Built a pricing engine for path-dependent FX products, validated on 40+ benchmark trades to within 1 bp.</span></span></li>
-        <li><span class="when">Aug–Sep 2025</span>
-            <span class="what"><strong>Quant Developer</strong>, iWealth India LLP<br>
-            <span>Built an earnings-call transcription pipeline and a filings summariser that saved the investment team 5+ hours of reading a day.</span></span></li>
-        <li><span class="when">Jan–May 2025</span>
-            <span class="what"><strong>Teaching Assistant</strong>, MA110 Linear Algebra and Differential Equations, IIT Bombay<br>
-            <span>Weekly tutorials and grading for 40+ first-year students.</span></span></li>
-        <li><span class="when">Aug 2024–May 2025</span>
-            <span class="what"><strong>Full Stack Developer</strong>, Dreamplan.io ApS, Denmark (remote)<br>
-            <span>Shipped production cloud infrastructure for a wealth-advice platform.</span></span></li>
-      </ol>
-    </div>
-    <div class="reveal" style="--d:80ms">
-      <h3>Education &amp; honours</h3>
-      <ol>
-        <li><span class="when">2023–2027</span>
-            <span class="what"><strong>B.Tech. in Chemical Engineering</strong>, Indian Institute of Technology Bombay<br>
-            <span>Minor in Artificial Intelligence and Data Science · CPI 9.74 / 10</span></span></li>
-        <li><span class="when">2025</span><span class="what">Institute Academic Prize, IIT Bombay</span></li>
-        <li><span class="when">2025</span><span class="what">1st of 64,000+ participants, Google Solution Challenge</span></li>
-        <li><span class="when">2024–25</span><span class="what">AP grade (top ~1% of class) in three core chemical engineering courses</span></li>
-        <li><span class="when">2024</span><span class="what">Perfect 10.0 / 10 semester performance index</span></li>
-      </ol>
-    </div>
-  </div>
+  <!-- ---------- STGNN ---------- -->
+  <article class="item">
+    <h3>Spatiotemporal graph networks for multi-store forecasting</h3>
+    <p class="meta">Preprint · Course project, EE782, with Prof. Amit Sethi · with Arpita Dayama · Aug–Nov 2025</p>
+    <p>Retail stores share trends, so forecasting them one at a time throws information away. We forecast weekly sales for 45 Walmart stores jointly with a spatiotemporal GNN that learns its own store-to-store graph, combining dilated temporal convolutions with graph convolution, and compared it with ARIMA, XGBoost and LSTM under identical features and splits. The learned graph recovered functional groups of stores without any location data. Result: 2.08% MAPE on Store 37, nearly 50% lower than ARIMA.</p>
+    <figure>
+      <div class="frame">
+        <img src="assets/gnn_learned_graph.png" width="1049" height="798" loading="lazy" style="max-height:22rem"
+             alt="Heatmap of the learned store-to-store adjacency matrix for 45 stores, ordered by hierarchical clustering with a dendrogram, showing a few strongly connected blocks of stores."
+             onerror="this.closest('figure').hidden=true">
+      </div>
+      <figcaption>Learned spatial dependencies between stores, ordered by hierarchical clustering.</figcaption>
+    </figure>
+    <ul class="links">
+      <li><a href="https://arxiv.org/abs/2511.19267">arXiv</a></li>
+      <li><a href="https://github.com/Manish-785/sales-demand-forecasting">Code</a></li>
+    </ul>
+  </article>
+
+  <!-- ---------- Quant Auditor ---------- -->
+  <article class="item">
+    <h3>Quant Auditor: a small language model that audits trading backtests</h3>
+    <p class="meta">Ongoing · Course project, IE624 Generative and Agentic AI · team of two, with Arpita</p>
+    <p>A trading strategy can look profitable only because of hidden mistakes such as look-ahead, ignored trading costs or in-sample tuning. I am building an auditor agent that investigates strategy code by running experiments on it, with one rule: no number reaches the user unless it is cited to its source or produced by an executed test. It is trained on 2,921 matched pairs of flawed and clean backtests on 20 years of real prices, using a fine-tuned Qwen3-4B on free GPUs. A hand audit found at least one major flaw in about 70% of 30 popular public backtest notebooks.</p>
+    <!-- Figure / code link: add when ready, e.g.
+    <figure><div class="frame"><img src="assets/quant_auditor.png" alt="..." loading="lazy" onerror="this.closest('figure').hidden=true"></div><figcaption>...</figcaption></figure>
+    <ul class="links"><li><a href="https://github.com/...">Code</a></li></ul> -->
+  </article>
+
+  <!-- ---------- GenAI drug discovery ---------- -->
+  <article class="item">
+    <h3>Generative AI for drug discovery</h3>
+    <p class="meta">1st of 64,000+ participants · Google Solution Challenge 2025 · team project</p>
+    <p>A protein-conditioned recurrent network generates candidate molecules for a given target: a bidirectional LSTM with attention encodes the protein, and the generator is trained on 550K+ BindingDB samples. Candidates are ranked on drug-likeness, toxicity, solubility and predicted binding, using DiffDock and MolFormer. Generated molecules were 100% valid and 99.7% unique.</p>
+    <!-- Figure / code / demo link: add here if the MolGenX repository or demo becomes public -->
+  </article>
 </section>
 
 <!-- =====================================================================
-     CONTACT — one row per way to reach me
-     Booking link (Google Calendar appointment page) appears here and in the intro
+     EXPERIENCE, EDUCATION & HONOURS
      ===================================================================== -->
-<section class="contact f-blue wrap grid" id="contact" data-field="blue" aria-labelledby="contact-h">
-  <div class="c-main reveal">
-    <h2 id="contact-h">Get in touch</h2>
-    <p>A question about the work, a problem worth solving together, or a paper to discuss: write, or book a slot.</p>
-    <a class="mail" href="mailto:23b0354@iitb.ac.in">23b0354@iitb.ac.in</a>
-    <div><a class="btn" href="https://calendar.app.google/aF46NTTX1WRm9ttb7">Book a 30-minute call</a></div>
-  </div>
-  <ul class="c-links reveal" style="--d:80ms" aria-label="Elsewhere">
-    <li><a href="assets/Manish_CV.pdf">Curriculum vitae <small>PDF</small><span class="arr" aria-hidden="true">↗</span></a></li>
-    <li><a href="https://scholar.google.com/citations?user=Yt-fyAMAAAAJ">Google Scholar <small>Papers</small><span class="arr" aria-hidden="true">↗</span></a></li>
-    <li><a href="https://github.com/Manish-785">GitHub <small>Code</small><span class="arr" aria-hidden="true">↗</span></a></li>
-    <li><a href="https://linkedin.com/in/manish-singh785">LinkedIn <small>Profile</small><span class="arr" aria-hidden="true">↗</span></a></li>
-    <li><a href="https://arxiv.org/abs/2511.19267">arXiv <small>Preprint</small><span class="arr" aria-hidden="true">↗</span></a></li>
+<section class="block col" id="experience" aria-labelledby="exp-h">
+  <h2 id="exp-h">Experience</h2>
+  <ol class="cv">
+    <li><span class="when">May–Jul 2026</span>
+        <span class="what"><strong>Summer Associate, Asia FX Structuring</strong>, Morgan Stanley
+        <span>Built a pricing engine for path-dependent FX products, validated on 40+ benchmark trades to within 1 bp.</span></span></li>
+    <li><span class="when">Aug–Sep 2025</span>
+        <span class="what"><strong>Quant Developer</strong>, iWealth India LLP
+        <span>Built an earnings-call transcription pipeline and a filings summariser that saved the investment team 5+ hours of reading a day.</span></span></li>
+    <li><span class="when">Jan–May 2025</span>
+        <span class="what"><strong>Teaching Assistant</strong>, MA110 Linear Algebra and Differential Equations, IIT Bombay
+        <span>Weekly tutorials and grading for 40+ first-year students.</span></span></li>
+    <li><span class="when">Aug 2024–May 2025</span>
+        <span class="what"><strong>Full Stack Developer</strong>, Dreamplan.io ApS, Denmark (remote)
+        <span>Shipped production cloud infrastructure for a wealth-advice platform.</span></span></li>
+  </ol>
+</section>
+
+<section class="block col" aria-labelledby="edu-h">
+  <h2 id="edu-h">Education &amp; honours</h2>
+  <ol class="cv">
+    <li><span class="when">2023–2027</span>
+        <span class="what"><strong>B.Tech. in Chemical Engineering</strong>, Indian Institute of Technology Bombay
+        <span>Minor in Artificial Intelligence and Data Science · CPI 9.74 / 10</span></span></li>
+    <li><span class="when">2025</span><span class="what">Institute Academic Prize, IIT Bombay</span></li>
+    <li><span class="when">2025</span><span class="what">1st of 64,000+ participants, Google Solution Challenge</span></li>
+    <li><span class="when">2024–25</span><span class="what">AP grade (top ~1% of class) in three core chemical engineering courses</span></li>
+    <li><span class="when">2024</span><span class="what">Perfect 10.0 / 10 semester performance index</span></li>
+  </ol>
+</section>
+
+<!-- =====================================================================
+     CONTACT
+     ===================================================================== -->
+<section class="block col contact" id="contact" aria-labelledby="contact-h">
+  <h2 id="contact-h">Contact</h2>
+  <p>I’m happy to hear about related work, collaborations or open problems. Email is best: <a href="mailto:23b0354@iitb.ac.in">23b0354@iitb.ac.in</a>. You can also <a href="https://calendar.app.google/aF46NTTX1WRm9ttb7">book a 30-minute call</a>.</p>
+  <ul class="contacts">
+    <li><a class="primary" href="mailto:23b0354@iitb.ac.in">Email</a></li>
+    <li><a href="assets/Manish_CV.pdf">CV (PDF)</a></li>
+    <li><a href="https://scholar.google.com/citations?user=Yt-fyAMAAAAJ">Google Scholar</a></li>
+    <li><a href="https://github.com/Manish-785">GitHub</a></li>
+    <li><a href="https://linkedin.com/in/manish-singh785">LinkedIn</a></li>
   </ul>
 </section>
 
 </main>
 
-<!-- =====================================================================
-     FOOTER — update the date when you change the page
-     ===================================================================== -->
-<footer class="foot f-black" data-field="black">
-  <div class="line">
+<!-- Update the date when you change the page -->
+<footer class="foot">
+  <div class="col">
     <span>Manish · Chemical Engineering, IIT Bombay</span>
-    <span><a href="https://arxiv.org/abs/2511.19267">arXiv</a> · Last updated October 2026</span>
+    <span>Last updated October 2026</span>
   </div>
 </footer>
 
 <script>
+// Mark the section being read in the nav.
 (function () {
-  // Entrances: reveal each part once it enters. Without IntersectionObserver everything shows at once.
-  var items = document.querySelectorAll('.reveal');
-  if (!('IntersectionObserver' in window)) { items.forEach(function (el) { el.classList.add('in'); }); return; }
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0 });
-  items.forEach(function (el) { io.observe(el); });
-
-  // Header takes the colours of the chapter under it.
-  var top = document.querySelector('.top');
-  var palette = {
-    paper:  ['var(--paper)',  'var(--paper-ink)',  'var(--blue)',      '#fff'],
-    stone:  ['var(--stone)',  'var(--paper-ink)',  'var(--blue)',      '#fff'],
-    blue:   ['var(--blue)',   '#fff',              '#fff',             'var(--blue)'],
-    black:  ['var(--black)',  '#fff',              '#fff',             'var(--black)']
-  };
-  var fields = document.querySelectorAll('[data-field]');
-  var setHeader = function () {
-    var y = top.offsetHeight / 2, current = 'paper';
-    fields.forEach(function (f) { var r = f.getBoundingClientRect(); if (r.top <= y && r.bottom > y) current = f.dataset.field; });
-    // In the hero, the bar sits on the paper half.
-    var p = palette[current];
-    top.style.setProperty('--hbg', p[0]); top.style.setProperty('--hink', p[1]);
-    top.style.setProperty('--hbtn', p[2]); top.style.setProperty('--hbtn-ink', p[3]);
-  };
-
-  // Mark the section being read in the nav.
   var links = {};
   document.querySelectorAll('.top nav a').forEach(function (a) { links[a.getAttribute('href').slice(1)] = a; });
-  var setCurrent = function () {
-    var mid = window.innerHeight * 0.4, id = null;
+  var update = function () {
+    var mid = window.innerHeight * 0.35, id = null;
     Object.keys(links).forEach(function (k) {
       var s = document.getElementById(k); if (!s) return;
       var r = s.getBoundingClientRect(); if (r.top <= mid && r.bottom > mid) id = k;
     });
     Object.keys(links).forEach(function (k) { if (k === id) links[k].setAttribute('aria-current', 'true'); else links[k].removeAttribute('aria-current'); });
   };
-
   var ticking = false;
   window.addEventListener('scroll', function () {
     if (ticking) return; ticking = true;
-    requestAnimationFrame(function () { setHeader(); setCurrent(); ticking = false; });
+    requestAnimationFrame(function () { update(); ticking = false; });
   }, { passive: true });
-  setHeader(); setCurrent();
+  update();
 })();
 </script>
 </body>
