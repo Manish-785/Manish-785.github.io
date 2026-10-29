@@ -316,12 +316,12 @@ a.todo { outline: 1px dashed #c0392b; outline-offset: 2px; }
 
     <!-- ---------- Project 3: Quant Auditor ---------- -->
     <article class="project" aria-labelledby="p-qa">
-      <h3 id="p-qa">Quant Auditor: a small language model that audits trading backtests</h3>
+      <h3 id="p-qa">Quant Auditor: training a small language model to audit trading backtests</h3>
       <p class="meta"><span class="state">Ongoing</span> · Course project, IE624 Generative and Agentic AI · team of two, with Arpita</p>
-      <p>A trading strategy can look profitable only because of hidden mistakes such as look-ahead, ignored trading costs or in-sample tuning. I am building an auditor agent that investigates strategy code by running experiments on it, with one rule: no number reaches the user unless it is cited to its source or produced by an executed test. It is trained on flawed backtests paired with clean controls that differ in exactly one detail, using a fine-tuned Qwen3-4B on free GPUs.</p>
+      <p>A trading strategy can look profitable only because of hidden mistakes such as look-ahead, ignored costs or data leakage. I built an environment in which a language model audits strategy code by running it: it truncates data, patches suspect lines and re-runs them with a paired Sharpe test, and analyses positions and costs, then reports each flaw with its line and severity. The model, Qwen3-4B, is trained on about 3,200 matched pairs of flawed and clean code, first with supervised fine-tuning and then with GRPO.</p>
       <dl class="results">
-        <div><dt>~70%</dt><dd>of 30 popular public backtest notebooks that simulate profits had at least one major flaw (audited by hand)</dd></div>
-        <div><dt>2,921</dt><dd>matched pairs of flawed and clean backtests on 20 years of real prices</dd></div>
+        <div><dt>48% → 89%</dt><dd>accuracy on held-out strategy templates; false alarms fell from 96% to 7%</dd></div>
+        <div><dt>79%</dt><dd>agreement with expert audits of 29 public notebooks, vs. 72% for a frontier model with the same tools</dd></div>
       </dl>
       <figure>
         <img src="assets/quant_auditor.png" loading="lazy"
